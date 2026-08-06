@@ -1,0 +1,22 @@
+{
+  "name": "gauntlet",
+  "displayName": "Gauntlet",
+  "version": "0.1.0",
+  "description": "Build a production-grade app with an AI agent, then harden it. /gauntlet:build turns a spec into ~16 numbered build prompts, each ending in a verifiable checkpoint. /gauntlet:harden runs the A-G pre-launch audit cascade. Every gate is proven able to fail before it is trusted.",
+  "author": {
+    "name": "schae"
+  },
+  "repository": "https://github.com/user2922/gauntlet-skills",
+  "license": "MIT",
+  "keywords": [
+    "security",
+    "audit",
+    "pre-launch",
+    "code-review",
+    "scaffold",
+    "build-plan",
+    "nextjs",
+    "supabase",
+    "stripe"
+  ]
+}

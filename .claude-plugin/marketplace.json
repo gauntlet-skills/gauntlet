@@ -1,0 +1,15 @@
+{
+  "name": "gauntlet-skills",
+  "description": "Skills for building and hardening production apps with an AI coding agent.",
+  "owner": {
+    "name": "schae"
+  },
+  "plugins": [
+    {
+      "name": "gauntlet",
+      "source": "./plugins/gauntlet",
+      "description": "Build a production-grade app with an AI agent, then harden it. Numbered build prompts with verifiable checkpoints, plus the A-G pre-launch audit cascade.",
+      "version": "0.1.0"
+    }
+  ]
+}
