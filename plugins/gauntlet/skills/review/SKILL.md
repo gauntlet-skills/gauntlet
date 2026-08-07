@@ -64,22 +64,23 @@ Each is scoped to the changed hunks and the files they touch. They may read
 surrounding context but must not review unrelated code.
 
 - **correctness** — logic errors, off-by-one, null/undefined, races, error
-  handling, wrong API usage, broken invariants, missed edge cases
+  handling, wrong API usage, broken invariants, edge cases the change misses
 - **security** — authz/authn gaps, injection, secrets exposure, unsafe input,
   XSS/CSRF/SSRF, tenant isolation, unsafe defaults — only where the diff
   introduces or touches them
 - **perf** — N+1s, unbounded queries or loops, indexes implied by new query
-  shapes, needless re-renders, blocking calls on hot paths
+  shapes, needless re-renders or allocations, blocking calls on hot paths
 - **interaction** — how the change ripples: callers of changed signatures,
   assumptions it breaks elsewhere, migration and rollout ordering, backward
   compatibility, code it leaves unreachable
 
 Findings come back as: severity (CRITICAL/HIGH/MEDIUM/LOW), `file:line`, a
 one-line claim, a **concrete failure scenario** (specific inputs or state →
-specific wrong output), and a suggested fix.
+specific wrong output or crash), and a suggested fix.
 
 Instruct every reviewer to prefer **fewer, higher-confidence** findings, anchor
-each to a real failure scenario, and skip style unless it causes a defect.
+each to a real failure scenario, and skip style or taste unless it causes an
+actual defect.
 
 ### 3. Adversarially verify every candidate
 
