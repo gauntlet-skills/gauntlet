@@ -1,12 +1,17 @@
 # Gauntlet
 
-Two skills for building a production-grade app with an AI coding agent, and then
-proving it is actually ready for users.
+Three skills for building a production-grade app with an AI coding agent,
+reviewing each change, and proving it is ready for users. **Each runs on its
+own** — install once, use whichever you need.
 
 ```
-/gauntlet:build     spec  →  ~16 numbered build prompts, each with a checkpoint
+/gauntlet:build     idea       →  ~16 numbered build prompts, each with a checkpoint
+/gauntlet:review    a diff     →  multi-agent review, every finding adversarially verified
 /gauntlet:harden    built app  →  A–G audit cascade, each phase behind a gate
 ```
+
+They compose — build it, review each change, harden before launch — but nothing
+requires you to use more than one.
 
 Free, MIT, and it runs entirely inside your own Claude session — no service to
 sign up for, no API key, no per-run cost beyond your own plan.
@@ -75,6 +80,14 @@ branch and had never run.
 - The 16 standing rules that go into your `CLAUDE.md`
 - The four during-build spot checks, placed inline where they apply
 - `gates/lint-buildplan.mjs` — validates a `BUILD.md`'s structure
+
+**`/gauntlet:review`**
+
+- Parallel reviewers across correctness, security, performance, interaction
+- A skeptic pass that tries to *refute* every finding — what survives is what
+  could not be broken
+- **Expensive by design.** A measured run over ~1,470 lines used roughly 390k
+  subagent tokens. It scales down for small diffs; the skill says how.
 
 **`/gauntlet:harden`**
 
