@@ -6,9 +6,28 @@ license: MIT
 
 # Build Plan
 
-**New to this? Read `QUICKSTART.md` first** — the five steps end to end, written
-for someone who has never done it. `example/BUILD.md` is a complete worked
-example; it is the shape `gates/lint-buildplan.mjs` checks for, and it passes.
+## If the user hasn't described their app yet, ask for this
+
+Do not start planning from a one-line idea. Ask them to fill in this shape, in
+plain language — no jargon, no spec format:
+
+```
+I want to build: <one paragraph, like you'd describe it to a friend>
+
+Who it's for:        <who>
+What they can do:    <the 3–5 things a user can actually do>
+What I charge:       <free / one price / tiers — or "decide for me">
+```
+
+Then ask the three questions that change the build: what has to be true for
+someone to pay, what the one thing a new user must succeed at is, and whether
+anything genuinely needs AI (if not, say no — it keeps the app simpler and
+cheaper).
+
+Full walkthrough for a first-timer: `QUICKSTART.md`. Never used a terminal?
+`reference/cli-basics.md` explains what a CLI is and the five you'll touch.
+`example/BUILD.md` is a complete worked example — it is the shape
+`gates/lint-buildplan.mjs` checks for, and it passes.
 
 Produces a **BUILD.md**: a numbered sequence of build prompts an agent executes
 one at a time, each ending in a checkpoint that can actually be checked. Derived

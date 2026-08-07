@@ -20,11 +20,25 @@ sign up for, no API key, no per-run cost beyond your own plan.
 
 If the install summary says `Run /reload-plugins to activate.`, run that.
 
+Then type `/gauntlet:build` or `/gauntlet:harden`. You can also just describe the
+task — "harden this before launch" — and Claude picks the right one.
+
+<details>
+<summary>Using Cowork, cloud sessions, or routines?</summary>
+
+A plugin enabled only in your user settings doesn't transfer to those. For cloud
+sessions, declare it in the repository's `.claude/settings.json` so it installs
+at session start. For Cowork, enable the skill for your claude.ai account. Local
+Claude Code needs none of this.
+</details>
+
 ## Start here
 
 New to this? Read
 [`QUICKSTART.md`](plugins/gauntlet/skills/build/QUICKSTART.md) — five steps end
-to end, written for someone who has never done it. Then look at
+to end, written for someone who has never done it. Never used a terminal?
+[`cli-basics.md`](plugins/gauntlet/skills/build/reference/cli-basics.md) covers
+what a CLI is and the five you'll touch. Then look at
 [`example/BUILD.md`](plugins/gauntlet/skills/build/example/BUILD.md), a complete
 worked example you can copy the shape of.
 

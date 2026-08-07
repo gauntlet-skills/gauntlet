@@ -7,6 +7,11 @@ Assumed: Claude Code installed, a terminal, and about an hour of your attention
 spread across a few days. **No prior experience required.** You will not be asked
 to write code.
 
+Never used a terminal, or unsure what `npm` or `gh` are? Read
+[`reference/cli-basics.md`](reference/cli-basics.md) first — it covers what a CLI
+is, the five you'll touch (node/npm, git, gh, vercel, supabase), and the three
+rules for handling keys. Ten minutes, and it removes most of what goes wrong.
+
 ---
 
 ## Step 0 — Say this

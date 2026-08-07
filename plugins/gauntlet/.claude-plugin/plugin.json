@@ -2,7 +2,7 @@
   "name": "gauntlet",
   "displayName": "Gauntlet",
   "version": "0.1.0",
-  "description": "Build a production-grade app with an AI agent, then harden it. /gauntlet:build turns a spec into ~16 numbered build prompts, each ending in a verifiable checkpoint. /gauntlet:harden runs the A-G pre-launch audit cascade. Every gate is proven able to fail before it is trusted.",
+  "description": "Build a production-grade app with an AI agent, then harden it. Two commands: /gauntlet:build turns a plain-English idea into ~16 numbered build prompts, each ending in a checkpoint you can actually verify. /gauntlet:harden runs the A-G pre-launch audit cascade over the result. Includes the full 144-item web rubric, the 162-item mobile rubric, a terminal/CLI primer for non-developers, and a worked example. Every gate is proven able to fail before it is trusted.",
   "author": {
     "name": "schae"
   },
