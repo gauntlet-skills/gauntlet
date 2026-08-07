@@ -129,8 +129,26 @@ const CHECKS = [
     id: 'CACHE-PRIVATE',
     applies: (cls) => cls === 'dynamic' || cls === 'api',
     run(h, path) {
-      const cc = h.get('cache-control') || '';
-      if (/public/.test(cc) && !/no-store|private|max-age=0/.test(cc)) {
+      const cc = (h.get('cache-control') || '').toLowerCase();
+      if (!cc) return;
+
+      // Evaluate the SHARED cache independently of the browser cache. The old
+      // predicate required the literal token `public` and treated any
+      // `max-age=0` as proof of safety -- so `s-maxage=3600` alone, and
+      // `public, max-age=0, s-maxage=600`, both read as clean. That second form
+      // is the canonical "don't cache in the browser, do cache at the edge"
+      // idiom and is the likeliest real instance of this defect on a CDN.
+      const suppressed = /no-store|private|no-cache|s-maxage=0(?!\d)/.test(cc);
+      if (suppressed) return;
+
+      const sMaxAge = /s-maxage=([1-9]\d*)/.exec(cc);
+      const maxAge = /(?<!s-)max-age=([1-9]\d*)/.exec(cc);
+
+      if (sMaxAge) {
+        add('HIGH', path, 'CACHE-PRIVATE',
+          `Shared cache may store this route for ${sMaxAge[1]}s (${cc})`,
+          'A CDN may serve one user’s response to another. s-maxage targets the shared cache specifically, and max-age=0 does not restrain it.');
+      } else if (/public/.test(cc) && maxAge) {
         add('HIGH', path, 'CACHE-PRIVATE',
           `Dynamic/API route is publicly cacheable (${cc})`,
           'A shared cache may serve one user’s response to another.');

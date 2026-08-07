@@ -12,7 +12,7 @@ are inline rather than batched.
 
 ### Spot check — Environment Variable & Secret Audit  *(run now, after setup — and again whenever you add a key)*
 ```
-Review all environment variables in undefined.
+Review all environment variables in <YOUR APP>.
 1. Move any NEXT_PUBLIC_ variable holding a sensitive credential server-side.
 2. Confirm every secret is in env vars, never hardcoded.
 3. Verify .env/.env.local are gitignored and .env.example has placeholders only.
@@ -25,7 +25,7 @@ Review all environment variables in undefined.
 
 ### Spot check — Database Connection Pooling  *(run now, right after the schema phase)*
 ```
-Configure Supabase connection pooling for undefined.
+Configure Supabase connection pooling for <YOUR APP>.
 1. Transaction pool mode for serverless functions.
 2. DATABASE_URL → Transaction Pooler (port 6543); direct connection (5432) for migrations only.
 3. Verify the client is initialized with the pooler URL in production env.
@@ -35,7 +35,7 @@ Configure Supabase connection pooling for undefined.
 
 ### Spot check — Data Access Layer Audit  *(run now, after your first data-returning API routes)*
 ```
-For every API endpoint in undefined that returns user data:
+For every API endpoint in <YOUR APP> that returns user data:
 1. Confirm the query filters by the authenticated user's ID.
 2. Confirm a user cannot access another user's records by guessing a UUID.
 3. Confirm the error response is 404 (not 403) when ownership fails.
@@ -46,7 +46,7 @@ Implement fixes for any endpoint missing ownership verification.
 
 ### Spot check — Stripe Integration Audit  *(run now, immediately after adding Stripe)*
 ```
-Audit the Stripe integration in undefined.
+Audit the Stripe integration in <YOUR APP>.
 1. Add idempotency keys to all payment requests (double-click = double charge otherwise).
 2. Verify webhook signatures with stripe.webhooks.constructEvent(rawBody, sig, secret) where
    rawBody = await request.text() (NOT request.json()).
