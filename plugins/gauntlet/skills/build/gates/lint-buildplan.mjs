@@ -48,7 +48,11 @@ if (src.trim() === '') {
 // or EOF. Checkpoints are "### Checkpoint <id>" inside that span.
 // Accept ##/###/#### — real plans vary in heading depth (Waypoint uses ###),
 // and rejecting on depth alone would flag a valid document as unparseable.
-const promptRe = /^#{2,4}\s+Prompt\s+([0-9]+[a-z]?)\s*[—–-]\s*(.+)$/gim;
+// Separator class includes ':' — the Gauntlet generator emits
+// "## PROMPT 1: Spec validation", and requiring a dash made this exit 2 on the
+// very documents the product produces. Exiting 2 on valid input is the fastest
+// route to a gate being switched off.
+const promptRe = /^#{2,4}\s+Prompt\s+([0-9]+[a-z]?)\s*[—–:-]\s*(.+)$/gim;
 const marks = [...src.matchAll(promptRe)].map((m) => ({
   id: m[1],
   title: m[2].trim(),

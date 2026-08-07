@@ -16,9 +16,15 @@
 #
 set -uo pipefail
 
+# ${ARR[@]+"${ARR[@]}"} rather than "${ARR[@]}" throughout: under `set -u`,
+# bash <= 4.3 treats an EMPTY array as unset and aborts. Stock macOS ships
+# bash 3.2, and the empty case here is the all-green path (every candidate
+# script defined, nothing skipped) — so the failure would land precisely on a
+# passing run, exiting non-zero and reading as GATE FAILED.
+
 PROJECT_DIR="."
 LIST_ONLY=0
-for arg in "$@"; do
+for arg in ${@+"$@"}; do
   case "$arg" in
     --list) LIST_ONLY=1 ;;
     -*) echo "unknown flag: $arg" >&2; exit 2 ;;
@@ -74,7 +80,7 @@ fi
 if [ "$LIST_ONLY" -eq 1 ]; then
   echo "Would run in $(pwd):"
   for entry in "${SELECTED[@]}"; do echo "  ✓ ${entry%%|*}  (npm run ${entry##*|})"; done
-  for s in "${SKIPPED[@]}"; do echo "  – $s — not defined"; done
+  for s in ${SKIPPED[@]+"${SKIPPED[@]}"}; do echo "  – $s — not defined"; done
   exit 0
 fi
 
@@ -117,7 +123,7 @@ for entry in "${SELECTED[@]}"; do
   fi
 done
 
-for s in "${SKIPPED[@]}"; do
+for s in ${SKIPPED[@]+"${SKIPPED[@]}"}; do
   printf '  %-14s ... N/A — script not defined\n' "${s%% (*}"
   RESULTS+=("| ${s%% (*} | N/A — not defined |")
 done
