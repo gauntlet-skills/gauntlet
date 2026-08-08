@@ -146,7 +146,21 @@ if [ "$FAILED" -eq 1 ]; then
   exit 1
 fi
 
-echo "GATE PASSED — all applicable mechanical checks green."
+# Report COVERAGE, not just outcome. Exit 0 means "ran, found nothing" per
+# GATES.md, and a run where 1 of 5 checks existed asserts that for the whole
+# gate. The per-check N/A lines above are honest, but a caller reading only the
+# exit code cannot tell 5/5 from 1/5 -- and deleting check:secrets from a
+# package.json would then be indistinguishable from never having had it.
+RAN=${#SELECTED[@]}
+TOTAL=${#CANDIDATES[@]}
+if [ "$RAN" -lt "$TOTAL" ]; then
+  echo "GATE PASSED — but only $RAN of $TOTAL checks are defined in this project."
+  MISSING=""
+  for s in ${SKIPPED[@]+"${SKIPPED[@]}"}; do MISSING="$MISSING ${s%% (*}"; done
+  echo "Not run:$MISSING — a check that does not exist is not a check that passed."
+else
+  echo "GATE PASSED — all $TOTAL mechanical checks ran and are green."
+fi
 echo
 echo "Reminder: this covers MECHANICAL checks only. The judgment gate for this"
 echo "phase (the audit findings) is separate — see gates/GATES.md."

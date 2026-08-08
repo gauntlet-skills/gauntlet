@@ -40,8 +40,23 @@ try {
   process.exit(2);
 }
 
+/**
+ * Sent on every request so reflected-origin CORS is visible.
+ *
+ * Without an Origin header a server that echoes the caller's origin back emits
+ * no ACAO at all, so the audit could only ever see a literal `*` -- which is
+ * the LESS dangerous configuration, because browsers refuse to pair a wildcard
+ * with credentials. The genuinely exploitable form was invisible.
+ */
+const PROBE_ORIGIN = 'https://gauntlet-cors-probe.invalid';
+
 /** Classify a route so findings can be judged in context. */
-function classify(path, h) {
+function classify(path, status, h) {
+  // A 3xx has no body, so CSP / frame / referrer checks are meaningless against
+  // it -- they would report four findings about a page that was never rendered.
+  // Following the redirect instead would be worse: it would audit the target's
+  // headers while labelling them with the source path.
+  if (status >= 300 && status < 400) return 'redirect';
   if (path.startsWith('/api/')) return 'api';
   if (h.get('x-nextjs-prerender') || /prerender/i.test(h.get('x-vercel-cache') || '')) return 'static';
   return 'dynamic';
@@ -58,8 +73,19 @@ const CHECKS = [
     applies: () => true,
     run(h, path, cls) {
       const acao = h.get('access-control-allow-origin');
-      if (acao !== '*') return;
       const creds = h.get('access-control-allow-credentials') === 'true';
+
+      // Reflection: the server echoed back the origin we sent. Strictly more
+      // dangerous than a wildcard, because browsers DO honour it with cookies.
+      if (acao === PROBE_ORIGIN || acao === 'null') {
+        add(creds ? 'CRITICAL' : 'HIGH', path, 'CORS-REFLECTED',
+          `Access-Control-Allow-Origin reflects an arbitrary origin${creds ? ' WITH credentials' : ''}`,
+          creds
+            ? 'Any site can read this response with the victim’s cookies attached. Allow-list specific origins instead of echoing the request.'
+            : 'Any origin can read this response. Credentials are not permitted, but allow-list specific origins rather than echoing the request.');
+        return;
+      }
+      if (acao !== '*') return;
       if (creds) {
         add('CRITICAL', path, 'CORS-WILDCARD',
           'Access-Control-Allow-Origin: * with Allow-Credentials: true',
@@ -89,7 +115,7 @@ const CHECKS = [
   },
   {
     id: 'CSP',
-    applies: (cls) => cls !== 'api',
+    applies: (cls) => cls !== 'api' && cls !== 'redirect',
     run(h, path) {
       const v = h.get('content-security-policy');
       if (!v) return add('MEDIUM', path, 'CSP', 'Content-Security-Policy missing');
@@ -109,7 +135,7 @@ const CHECKS = [
   },
   {
     id: 'FRAME',
-    applies: (cls) => cls !== 'api',
+    applies: (cls) => cls !== 'api' && cls !== 'redirect',
     run(h, path) {
       const xfo = h.get('x-frame-options');
       const csp = h.get('content-security-policy') || '';
@@ -120,7 +146,7 @@ const CHECKS = [
   },
   {
     id: 'REFERRER',
-    applies: (cls) => cls !== 'api',
+    applies: (cls) => cls !== 'api' && cls !== 'redirect',
     run(h, path) {
       if (!h.get('referrer-policy')) add('LOW', path, 'REFERRER', 'Referrer-Policy missing');
     },
@@ -202,13 +228,16 @@ for (const p of paths) {
   const url = origin + (p.startsWith('/') ? p : `/${p}`);
   let res;
   try {
-    res = await fetch(url, { redirect: 'manual', headers: { 'user-agent': 'gauntlet-check-headers' } });
+    res = await fetch(url, {
+      redirect: 'manual',
+      headers: { 'user-agent': 'gauntlet-check-headers', origin: PROBE_ORIGIN },
+    });
   } catch (err) {
     console.error(`ERROR: request to ${url} failed: ${err.message}`);
     console.error('       Refusing to report a pass on a surface that could not be reached.');
     process.exit(2);
   }
-  const cls = classify(p, res.headers);
+  const cls = classify(p, res.status, res.headers);
   results.push({ path: p, status: res.status, cls });
   for (const c of CHECKS) {
     if (c.applies(cls)) c.run(res.headers, p, cls, res.status);
