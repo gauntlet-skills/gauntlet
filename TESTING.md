@@ -16,8 +16,6 @@ The repo is private, so you need your GitHub CLI logged in first:
 gh auth status        # should show you're logged in
 ```
 
-Then in Claude Code:
-
 **Claude Code:**
 
 ```
