@@ -131,8 +131,25 @@ you checked.
 
 ## Limits
 
-- **Reviews a diff, not a codebase.** For whole-project hardening use
-  the **harden** skill.
+- **Reviews a diff, not a codebase.** For whole-project hardening use the
+  **harden** skill.
+
+  This is a hard structural limit, not a matter of effort, and it is worth
+  stating to the user rather than letting a clean review imply more than it
+  means. Unless these are literally in the changed lines, this skill will never
+  look at them:
+
+  - whole-app row-level-security posture — on all 40 tables, or 38
+  - tenant isolation across every route, not the ones touched
+  - indexes implied by query shapes elsewhere in the schema
+  - environment and documentation drift
+  - whether a first-time user can complete signup and reach value
+  - whether CI has ever actually run
+  - headers on the deployed origin, which appear in no source file
+
+  **A clean review means this change is sound. It does not mean the app is
+  ready.** If the user seems to be asking the second question, say so and point
+  them at the harden skill.
 - **No deterministic gates.** Unlike the **harden** skill, every judgment here comes
   from a model. The refutation pass is the only quality control, which is
   precisely why it is not optional.

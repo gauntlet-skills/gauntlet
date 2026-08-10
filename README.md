@@ -60,6 +60,90 @@ what a CLI is and the five you'll touch. Then look at
 [`example/BUILD.md`](plugins/gauntlet/skills/build/example/BUILD.md), a complete
 worked example you can copy the shape of.
 
+## Who this is for
+
+**Someone shipping a real app with an AI coding agent, who has to answer "is this
+safe to put in front of users?" and doesn't have a security team.**
+
+Concretely, it fits if you are:
+
+- A solo founder or small team building on Next.js + Supabase + Stripe
+- Using Claude Code or Codex to write most of the code
+- At the point where the app works and the question has shifted from "does it
+  run" to "will this hurt someone"
+- Non-technical or newly technical — `QUICKSTART.md` assumes no prior terminal
+  experience, and `reference/cli-basics.md` starts from what a CLI even is
+
+It fits less well if you have a dedicated security function, a stack far from the
+one above, or a codebase nobody built with an agent. The gate discipline still
+transfers; the specific checks assume that stack.
+
+## How it works
+
+Three skills, loaded on demand. Only each skill's one-line description sits in
+your session (~526 tokens total); the phase files, the 144-item rubric, and the
+gate scripts load **only when you actually invoke one**.
+
+Two kinds of check, deliberately separated:
+
+**Mechanical gates** are scripts with exit codes — typecheck, lint, tests, build,
+secret scan, HTTP header audit. They distinguish **three** states, not two:
+
+```
+0  ran, found nothing
+1  ran, found something
+2  COULD NOT RUN — broken, and never reported as clean
+```
+
+That third state is the whole design. Collapsing it into `0` is how a scanner
+reports success having never executed.
+
+**Judgment checks** are the audit findings — things no script can decide. Those
+get a different discipline: every claim names the file it was verified against,
+and each phase document carries a "What PASSES — verified, not assumed" section
+where a line without a filename does not belong.
+
+Each phase ends at a gate. CRITICAL and HIGH block; MEDIUM and LOW are recorded
+and may be deferred **with a written reason**, never silently.
+
+## Which one do I run?
+
+| Situation | Skill |
+|---|---|
+| An idea, no code yet | **build** |
+| A branch or PR to check before merging | **review** |
+| A working app, heading for launch | **harden** |
+| Just deployed | **harden**, Phase G |
+
+### review vs harden — they are not the same tool
+
+This is the distinction people get wrong, and it costs them.
+
+**review** is diff-scoped. It is a from-scratch approximation of a cloud
+"ultrareview": parallel reviewers over correctness, security, performance and
+interaction, then skeptics that try to *refute* every finding before it is
+reported. It is excellent at "is this change correct" and it runs on every branch.
+
+**It structurally cannot tell you whether your app is safe to launch**, because
+it only ever sees the diff. Unless the following are literally in your changed
+lines, a diff reviewer will never look at them:
+
+- Whole-app RLS posture — is row-level security on **all** 40 tables, or 38
+- Tenant isolation across every route, not the three you touched
+- Missing indexes implied by query shapes elsewhere in the schema
+- Environment and documentation drift — a var added months ago, never documented
+- Whether a first-time user can actually complete signup and reach value
+- Whether your CI has ever run
+- Headers on the deployed origin, which appear in no source file at all
+
+**harden** is whole-codebase and launch-scoped. Phase B audits security across
+the app, Phase C simulates the first-time user funnel, Phase E produces a
+readiness verdict separating code blockers from operator blockers, Phase G checks
+the thing actually serving users.
+
+Use both. They catch different classes of defect, and neither substitutes for the
+other.
+
 ## What makes this different
 
 Most build checklists are somebody's opinion. This one comes from running the
