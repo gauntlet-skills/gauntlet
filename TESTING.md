@@ -32,9 +32,10 @@ codex plugin marketplace add https://github.com/user2922/gauntlet-skills
 codex plugin add gauntlet@gauntlet-skills
 ```
 
-Codex has been verified with a **local** marketplace path only — the git-remote
-path is untested, so if `marketplace add <url>` misbehaves that is worth
-reporting, and cloning then adding the local folder is the fallback.
+Both paths are verified against this private repo — Codex clones it using your
+system git credentials, so `gh auth status` being green is enough. If the clone
+fails for you, the fallback is `git clone` it yourself and then
+`codex plugin marketplace add ./gauntlet-skills`.
 
 Check it worked:
 
