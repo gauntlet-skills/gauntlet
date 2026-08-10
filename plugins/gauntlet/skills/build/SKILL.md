@@ -34,9 +34,12 @@ one at a time, each ending in a checkpoint that can actually be checked. Derived
 from the Gauntlet scaffold generator and from Waypoint, which ran a 0–16 sequence
 to completion.
 
-Companion skill: **`gauntlet:harden`** runs the A–G hardening cascade *after* the build.
+Companion skill: the **harden** skill runs the A–G hardening cascade *after* the build.
 This skill stops at a built, tested, deployable app. Do not inline the post-build
 hardening here — see "Handoff" below.
+
+> Invocation differs by host: Claude Code uses `/gauntlet:<skill>`, Codex uses
+> `$<skill>`. Skill names below are given host-neutral.
 
 ## The output
 
@@ -117,7 +120,7 @@ to retrofit all four against finished code, which found real defects (a missing
 cheaper to catch at the prompt that introduced them.
 
 > **Naming collision, worth knowing.** These inline checks get called "A1–A4" in
-> some plans, and the post-build `gauntlet:harden` skill also has a Phase A with steps
+> some plans, and the post-build **harden** skill also has a Phase A with steps
 > A1–A4. They are different sequences with overlapping content. When writing a
 > plan, label these "Spot check after Prompt N" rather than "A1" and the
 > ambiguity disappears.
@@ -160,7 +163,7 @@ checkpoint item. "`POST /api/auth/login` returns 401 with no session" is.
 ## Handoff
 
 When the last tail prompt's checkpoint passes, the build is done and the
-**`gauntlet:harden`** skill takes over for A–G hardening.
+**harden** skill takes over for A–G hardening.
 
 Do not compress the post-build library into a single "run the hardening" prompt.
 Waypoint's plan did exactly that — collapsing B1–B6 into one step and omitting

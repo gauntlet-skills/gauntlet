@@ -299,6 +299,6 @@ restating, because two prompts that restate the same value eventually disagree.
 
 ## Next
 
-When the last checkpoint passes, hand off to **`gauntlet:harden`** for the A–G
+When the last checkpoint passes, hand off to the **harden** skill for the A–G
 cascade. Do not inline hardening here — it is a separate discipline with its own
 gates.

@@ -89,4 +89,4 @@ Before Prompt 1:
 
 - **Service keys table** — each service mapped to the prompt that first needs it,
   noting where a placeholder is enough
-- **Handoff to the `gauntlet:harden` skill** for A–G hardening. A pointer, not a summary
+- **Handoff to the harden skill** for A–G hardening. A pointer, not a summary

@@ -7,7 +7,7 @@ They are cheap when inline and expensive when retrofitted, because a defect
 introduced in Prompt 2 has had ten prompts of code built on top of it by the time
 a post-build audit finds it.
 
-> Label these "Spot check after Prompt N", not "A1–A4". The `gauntlet:harden` skill has
+> Label these "Spot check after Prompt N", not "A1–A4". The **harden** skill has
 > its own Phase A with steps A1–A4 covering overlapping ground, and the shared
 > lettering causes real confusion about which sequence is meant.
 
@@ -19,7 +19,7 @@ a post-build audit finds it.
 - `.env.example` bucketed REQUIRED / FEATURE / OPTIONAL, placeholders only.
 - The secret scanner runs, **and has been proven able to fail.** Plant a
   key-shaped string, watch it go red, remove it. A scanner nobody has seen fail
-  is decoration — see the `gauntlet:harden` skill's `gates/GATES.md`.
+  is decoration — see the harden skill's `gates/GATES.md`.
 - The scanner distinguishes "clean" from "did not run." If it scans build output,
   it must not report a pass when that output is absent.
 

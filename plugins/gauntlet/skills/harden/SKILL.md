@@ -10,8 +10,11 @@ A phased hardening process for taking a project from "it works" to "it can face
 real users and real money." Derived from real runs across medcomplex-pro,
 coachflow, globalenglishtech, and cyberjobs-pro.
 
-Companion skill: **`gauntlet:build`** produces the numbered build prompts that
+Companion skill: the **build** skill produces the numbered build prompts that
 get you a working app. This one starts where that finishes.
+
+> Invocation differs by host: Claude Code uses `/gauntlet:<skill>`, Codex uses
+> `$<skill>`. Skill names below are given host-neutral.
 
 **The load-bearing idea is the gate, not the checklist.** Any audit can produce a
 document that says PASS. A gate is only worth something if you have watched it

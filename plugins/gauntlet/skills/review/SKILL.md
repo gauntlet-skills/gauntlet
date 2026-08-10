@@ -10,8 +10,11 @@ A diff-scoped review that produces the signal of a careful senior reviewer with
 false positives aggressively suppressed. It is deliberately expensive; the cost
 buys the verification pass, which is the part that makes the output trustworthy.
 
-Companion skills: **`gauntlet:build`** produces the app, **`gauntlet:harden`**
+Companion skills: **build** produces the app, **harden**
 audits the whole project before launch. This one reviews a single change.
+
+> Invocation differs by host: Claude Code uses `/gauntlet:<skill>`, Codex uses
+> `$<skill>`. Skill names below are given host-neutral.
 
 ## Read this before running: cost
 
@@ -129,8 +132,8 @@ you checked.
 ## Limits
 
 - **Reviews a diff, not a codebase.** For whole-project hardening use
-  `gauntlet:harden`.
-- **No deterministic gates.** Unlike `gauntlet:harden`, every judgment here comes
+  the **harden** skill.
+- **No deterministic gates.** Unlike the **harden** skill, every judgment here comes
   from a model. The refutation pass is the only quality control, which is
   precisely why it is not optional.
 - **Cost scales with diff size**, not with how much is wrong. A clean 2,000-line
