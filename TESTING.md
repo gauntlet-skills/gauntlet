@@ -18,12 +18,25 @@ gh auth status        # should show you're logged in
 
 Then in Claude Code:
 
+**Claude Code:**
+
 ```
 /plugin marketplace add user2922/gauntlet-skills
 /plugin install gauntlet@gauntlet-skills
 ```
 
 If the summary says `Run /reload-plugins to activate.`, run that.
+
+**Codex CLI** (same repo, invoke with `$` instead of `/`):
+
+```bash
+codex plugin marketplace add https://github.com/user2922/gauntlet-skills
+codex plugin add gauntlet@gauntlet-skills
+```
+
+Codex has been verified with a **local** marketplace path only — the git-remote
+path is untested, so if `marketplace add <url>` misbehaves that is worth
+reporting, and cloning then adding the local folder is the fallback.
 
 Check it worked:
 

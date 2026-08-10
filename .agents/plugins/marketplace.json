@@ -1,0 +1,19 @@
+{
+  "name": "gauntlet-skills",
+  "interface": {
+    "displayName": "Gauntlet"
+  },
+  "plugins": [
+    {
+      "name": "gauntlet",
+      "source": {
+        "source": "local",
+        "path": "./plugins/gauntlet"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "Engineering"
+    }
+  ]
+}

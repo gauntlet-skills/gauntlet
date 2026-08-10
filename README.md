@@ -18,15 +18,28 @@ sign up for, no API key, no per-run cost beyond your own plan.
 
 ## Install
 
+Works in **Claude Code** and **Codex CLI** from the same repo — one shared skills
+tree, one manifest per host.
+
+**Claude Code**
+
 ```
 /plugin marketplace add user2922/gauntlet-skills
 /plugin install gauntlet@gauntlet-skills
 ```
 
-If the install summary says `Run /reload-plugins to activate.`, run that.
+If the summary says `Run /reload-plugins to activate.`, run that. Then
+`/gauntlet:build`, `/gauntlet:review`, or `/gauntlet:harden` — or just describe
+the task and Claude picks.
 
-Then type `/gauntlet:build` or `/gauntlet:harden`. You can also just describe the
-task — "harden this before launch" — and Claude picks the right one.
+**Codex CLI**
+
+```bash
+codex plugin marketplace add https://github.com/user2922/gauntlet-skills
+codex plugin add gauntlet@gauntlet-skills
+```
+
+Then type `$` and pick `build`, `review`, or `harden`.
 
 <details>
 <summary>Using Cowork, cloud sessions, or routines?</summary>
