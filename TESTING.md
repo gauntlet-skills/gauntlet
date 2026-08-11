@@ -19,7 +19,7 @@ gh auth status        # should show you're logged in
 **Claude Code:**
 
 ```
-/plugin marketplace add user2922/gauntlet-skills
+/plugin marketplace add gauntlet-skills/gauntlet
 /plugin install gauntlet@gauntlet-skills
 ```
 
@@ -28,7 +28,7 @@ If the summary says `Run /reload-plugins to activate.`, run that.
 **Codex CLI** (same repo, invoke with `$` instead of `/`):
 
 ```bash
-codex plugin marketplace add https://github.com/user2922/gauntlet-skills
+codex plugin marketplace add https://github.com/gauntlet-skills/gauntlet
 codex plugin add gauntlet@gauntlet-skills
 ```
 

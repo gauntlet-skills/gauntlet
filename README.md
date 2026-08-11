@@ -24,7 +24,7 @@ tree, one manifest per host.
 **Claude Code**
 
 ```
-/plugin marketplace add user2922/gauntlet-skills
+/plugin marketplace add gauntlet-skills/gauntlet
 /plugin install gauntlet@gauntlet-skills
 ```
 
@@ -35,7 +35,7 @@ the task and Claude picks.
 **Codex CLI**
 
 ```bash
-codex plugin marketplace add https://github.com/user2922/gauntlet-skills
+codex plugin marketplace add https://github.com/gauntlet-skills/gauntlet
 codex plugin add gauntlet@gauntlet-skills
 ```
 
