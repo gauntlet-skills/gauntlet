@@ -1,5 +1,5 @@
 GAUNTLET
-Build with AI. Review every change. Prove it's ready to ship.
+Build with AI. Review every change. Prove it's ready to ship. Can be used after the build plugin or on an existing app built without it.
 
 A production-readiness workflow for building with AI
 
