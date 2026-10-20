@@ -30,6 +30,9 @@ Gauntlet doesn't.
 
 Every mechanical gate is tested against a known failure. If the gate can't demonstrate that it catches a defect, you don't get to trust the green checkmark.
 
+Best fit: Next.js + Supabase + Stripe + Vercel
+Also useful elsewhere: the build/review/gating methodology transfers, but some hardening checks are stack-specific.
+
 Free, MIT, and it runs entirely inside your own Claude session — no service to
 sign up for, no API key, no per-run cost beyond your own plan.
 
