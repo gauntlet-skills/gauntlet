@@ -1,8 +1,16 @@
-# Gauntlet
+GAUNTLET
+Build with AI. Review every change. Prove it's ready to ship.
 
-Three skills for building a production-grade app with an AI coding agent,
-reviewing each change, and proving it is ready for users. **Each runs on its
-own** — install once, use whichever you need.
+A production-readiness workflow for building with AI
+
+Three free Claude Code skills that turn an AI coding session into a gated development process.
+
+Build → structured implementation with checkpoints
+Review → multi-agent review + adversarial verification
+Harden → whole-app security, UX, SEO/legal and launch audit
+
+/plugin marketplace add gauntlet-skills/gauntlet
+/plugin install gauntlet@gauntlet-skills
 
 ```
 /gauntlet:build     idea       →  ~16 numbered build prompts, each with a checkpoint
@@ -12,6 +20,15 @@ own** — install once, use whichever you need.
 
 They compose — build it, review each change, harden before launch — but nothing
 requires you to use more than one.
+
+A gate you have not seen fail is not a gate.
+
+AI says "PASS." So what?
+Most AI coding workflows ask the model to check its own work.
+
+Gauntlet doesn't.
+
+Every mechanical gate is tested against a known failure. If the gate can't demonstrate that it catches a defect, you don't get to trust the green checkmark.
 
 Free, MIT, and it runs entirely inside your own Claude session — no service to
 sign up for, no API key, no per-run cost beyond your own plan.
