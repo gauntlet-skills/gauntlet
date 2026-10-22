@@ -1,0 +1,7 @@
+# Check every text file out with LF, whatever core.autocrlf says.
+#
+# The skills are parsed by line: SKILL.md frontmatter, the hashed generated
+# files, and the bash gates. A Windows clone with core.autocrlf=true otherwise
+# gets CRLF, including the copy a host clones when it installs the plugin.
+* text=auto eol=lf
+*.sh text eol=lf

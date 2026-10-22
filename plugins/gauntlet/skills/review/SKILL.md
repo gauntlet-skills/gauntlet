@@ -16,6 +16,25 @@ audits the whole project before launch. This one reviews a single change.
 > Invocation differs by host: Claude Code uses `/gauntlet:<skill>`, Codex uses
 > `$<skill>`. Skill names below are given host-neutral.
 
+## When to use this rather than the host's own review
+
+Some hosts now ship a built-in diff review. Claude Code's `/code-review`, for
+example, has effort levels and a cloud multi-agent mode. Where one exists, it is
+a reasonable default for routine changes. Reach for this skill when:
+
+- **The host has no built-in review** (Codex, for one), or it is not enabled.
+- **The code must not leave your session.** This runs entirely in your own
+  session; a cloud review mode uploads the change.
+- **You want the shape under your control**: which reviewer dimensions run, how
+  many skeptics vote on a HIGH, and the cost table below.
+- **You want a second read that is not anchored on the first.** Two independent
+  reviews that agree are worth more than one run twice.
+
+Whichever you run, the limit is the same and it is the one to keep in view: **a
+clean diff review means this change is sound. It does not mean the app is ready
+to launch.** Neither review sees what is outside the diff (see Limits). That
+question belongs to the **harden** skill.
+
 ## Read this before running: cost
 
 **This spawns many subagents and burns real tokens.** A measured run over

@@ -76,6 +76,12 @@ items that are all "the file exists" verifies nothing — the agent wrote the
 files, that is not in question. Check *behaviour*: what happens on the error
 path, what the limit does at the boundary, what an unauthorized caller gets.
 
+**Write each item so it can be copied into a QA runsheet unchanged:** an action,
+the expected result, and where to look. "As a signed-out user, open `/dashboard`;
+you land on `/login?redirectTo=/dashboard`" works as a checkpoint and as a QA
+step. A checkpoint that only makes sense to the agent that wrote the code does
+neither.
+
 ## Front matter
 
 Before Prompt 1:

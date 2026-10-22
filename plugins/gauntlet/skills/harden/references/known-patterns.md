@@ -1,8 +1,9 @@
 # Known patterns
 
 Defects found in real gauntlet runs across medcomplex-pro, coachflow,
-globalenglishtech, cyberjobs-pro, gauntlet, and waypoint. Every entry here was
-live in a project that had already passed something.
+globalenglishtech, cyberjobs-pro, gauntlet, and waypoint, plus entries reported
+by an outside team that ran the gauntlet on a Supabase + Cloudflare Workers
+stack. Every entry here was live in a project that had already passed something.
 
 Check these first. They recur because they come from how the stack behaves, not
 from a particular team's mistakes — which means your app probably has some of
@@ -31,6 +32,40 @@ reported a pass having scanned nothing.
 **Check:** does your scanner distinguish *clean* from *did not run*? Plant a
 key-shaped string and watch it go red. If you cannot make it fail, it is not a
 gate. See `gates/GATES.md`.
+
+---
+
+## Gates that pass without checking
+
+The same class as the scanner above, found in a repo with about 500 guard tests
+that already took gates seriously. Each one reported "could not run" as a pass.
+
+**"Nothing to compare" means pass.** A ratchet exited `0` when its comparison
+base was unreachable, so a typo in `--base` checked nothing and went green. An
+unreachable base is exit `2`.
+
+**The first duplicate flag wins.** `npm run x -- --base X` appended a second
+`--base` to a script that already passed one, and the script read the first. The
+override you typed was ignored without a word. Reject a repeated flag, or make
+the last one win on purpose and test that.
+
+**Errors recorded, exit 0.** A probe runner saved each failed query as an
+`ERROR` row and exited `0`, so an expired login produced a "complete" report
+made entirely of errors. Any error row means the run did not complete: exit `2`.
+
+**Skip-if in CI.** A guard that skips when `git` is missing also skips, silently,
+in a CI image without `git`. Skip locally if you must, but fail when `CI` is set.
+
+**Guards that parse generated code.** A test read type entries only in block
+form. The generator then emitted a short entry on a single line, and CI went
+red on every branch while the code was correct. A guard over generated output
+must parse it the way the compiler does, or check the generator's input instead.
+
+**Mutations that don't land.** BSD `sed` can silently fail to apply an edit,
+and `git checkout` restores the index rather than the rewrite you meant to
+test. Either way the "mutated" run is a clean run, and the guard looks like it
+caught nothing or caught everything. Mutate from a backup copy, and grep that
+the mutation is present before you trust the result.
 
 ---
 
@@ -132,6 +167,21 @@ and been declared "no code defects blocking a web launch." Every one of those
 phases read source. None read the wire.
 
 **`x-powered-by` disclosing the framework.** One line: `poweredByHeader: false`.
+
+**Header config that only reaches staging.** A security review read
+`vercel.json`, saw `X-Frame-Options` and `frame-ancestors`, and recorded
+clickjacking protection as present. That config was served only by staging. All
+four production hosts were served by a different host and sent neither header.
+No source file showed it; only the wire did.
+
+**A host that cannot set headers.** A static SPA on a managed host has no place
+to set response headers. The fix moved to a CDN rule in proxy mode. Before
+writing a header fix, find which layer actually serves the response (see B6).
+
+**Framing protection that blanks the builder.** AI builders show previews inside
+an iframe, so `frame-ancestors 'none'` on every host breaks the builder's own
+editor. Apply it on production hosts only, and pin that with a test that checks
+a preview host gets no framing header (`gates/check-headers.mjs --preview`).
 
 ---
 

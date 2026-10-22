@@ -41,8 +41,10 @@ Ownership verified on every data request (not just identity) — `OwnershipError
 **Rule 7 — Zod Validation on Every Input.** Every `request.json()` followed by `.safeParse()`.
 Every URL parameter validated. Return 400 with a generic message on failure.
 
-**Rule 8 — Webhook Idempotency.** Every Stripe webhook checks `webhook_events` before
-processing; raw body via `request.text()`; signature verified; all 6 events handled.
+**Rule 8 — Webhook Idempotency.** Every Stripe webhook claims the event BEFORE processing: INSERT
+the event id into `webhook_events` (UNIQUE `stripe_event_id`) and let the unique constraint reject
+a duplicate — on conflict, return 200 and do nothing. Never SELECT-then-process: two concurrent
+retries both pass a read check. Raw body via `request.text()`; signature verified; all 6 events handled.
 
 **Rule 9 — No Placeholder Code.** No `// TODO`, no `console.log('test')`, no mock data in
 production paths, no stub functions. Every function called must be implemented.
@@ -111,42 +113,44 @@ a UI they're happy with.
 
 ---
 
-## How to Use This Document in Claude Code
+## How to Use This Document
 
-**First: put ALL your files in one folder.** Save every file from your Gauntlet package into one new
-project folder — this BUILD.md, plus CLAUDE.md, SPEC.md, and SPEC_DRAFT.md — and open Claude Code in
-that folder. You need all of them present for the build to work; don't leave any out.
+**First: keep the build files together.** The build skill writes three files into
+your project folder: this BUILD.md, CLAUDE.md and SPEC.md (plus BUILDER_RULES.md if
+part of the app is built in a tool that never reads repo files). Open the agent in
+that folder. All three need to be present for the build to work.
 
-This document has two kinds of content. Only one kind gets pasted into Claude Code.
+This document has two kinds of content. Only one kind gets pasted into the agent.
 
-**PASTE INTO CLAUDE CODE** — the numbered build prompts (`## PROMPT 1`, `## PROMPT 2a`, …),
+**PASTE INTO THE AGENT** — the numbered build prompts (`## PROMPT 1`, `## PROMPT 2a`, …),
 one per session, and the post-build audit prompts when you reach them. Each is a complete
 instruction. Run the checkpoint after each phase before moving on.
 
-**READ YOURSELF — do NOT paste** — the Phase-Zero Non-Negotiables (captured into CLAUDE.md
-by Prompt 1), the App Specification table, the checkpoints (you ask Claude to "Run Checkpoint N"),
+**READ YOURSELF — do NOT paste** — the Phase-Zero Non-Negotiables (captured into CLAUDE.md),
+the App Specification table, the checkpoints (you ask the agent to "Run Checkpoint N"),
 and everything under "How to Use". These are reference, not instructions.
 
 ### Session 1 (Prompt 1 only)
 ```
-Read [APP]_SPEC_DRAFT.md in full before doing anything.
+Read SPEC.md and CLAUDE.md in full before doing anything.
 
 [paste Prompt 1 here]
 ```
-Prompt 1 validates the spec and produces CLAUDE.md and SPEC.md as committed files.
+Prompt 1 validates the spec and commits CLAUDE.md and SPEC.md.
 
 ### Every session after Session 1
 ```
-Read CLAUDE.md, SPEC.md, and BUILD_STATUS.md before doing anything.
+Read CLAUDE.md, SPEC.md and BUILD.md before doing anything.
+Check git log for the last phase committed.
 Report: what phase we're on, what's complete, what's next.
 Then wait for my instruction before changing any files.
 
 Non-negotiables from CLAUDE.md apply to this entire session.
 ```
-Wait for the orientation report, then paste the next phase prompt. Claude Code has no
-memory between sessions — the context block is mandatory every time.
+Wait for the orientation report, then paste the next phase prompt. The agent has no
+memory between sessions, so the context block is needed every time.
 
-<!-- source-sha256: 5c5d8506ffd4 -->
+<!-- source-sha256: 36cca91795a5 -->
 
 That comment is the hash of the source this was built from. Run
 `gates/check-extracted.mjs` to verify this file has not been edited since.
