@@ -1,12 +1,12 @@
 # Web scaffold rubric
 
 **144 items · 8 categories · 27 marked `[Critical]`.**
-Analyzer prompt version `v9`.
+Analyzer prompt version `v10`.
 
 Generated from the analyzer source by `scripts/extract-rubric.ts`, not
 transcribed. Regenerate rather than hand-editing.
 
-<!-- source-sha256: ca7a6f0e5053 -->
+<!-- source-sha256: 05745a3e8603 -->
 
 That comment is the hash of the source this was built from. It changes whenever
 the source does, so two copies with the same hash came from the same source. Run
@@ -52,7 +52,7 @@ Grade as a skeptical auditor whose job is to find problems, not to validate the
 work. An audit that finds nothing on a fresh scaffold has not been run properly.
 
 ---
-### CATEGORY 1: AUTHENTICATION & SESSION SECURITY (31 items)
+### CATEGORY 1: AUTHENTICATION & SESSION SECURITY (32 items)
 
 **Password Security**
 □ 1.1  [Critical] Password minimum 12 characters enforced in Zod schema
@@ -117,7 +117,7 @@ explicitly stated in the schema specification so Claude Code does not add an unv
 
 ---
 
-### CATEGORY 2: STRIPE PAYMENTS & WEBHOOKS (22 items)
+### CATEGORY 2: STRIPE PAYMENTS & WEBHOOKS (23 items)
 
 □ 2.1  [Critical] Stripe webhook uses raw body: await request.text() — NOT request.json()
 □ 2.2  [Critical] Stripe webhook signature verification with stripe.webhooks.constructEvent
@@ -151,7 +151,7 @@ explicitly stated in the schema specification so Claude Code does not add an unv
 
 ---
 
-### CATEGORY 3: LEGAL COMPLIANCE (23 items)
+### CATEGORY 3: LEGAL COMPLIANCE (24 items)
 
 **Privacy Policy**
 □ 3.1  Privacy policy page exists and accessible without login
@@ -197,7 +197,7 @@ explicitly stated in the schema specification so Claude Code does not add an unv
 
 ---
 
-### CATEGORY 4: INFRASTRUCTURE & OBSERVABILITY (13 items)
+### CATEGORY 4: INFRASTRUCTURE & OBSERVABILITY (14 items)
 
 □ 4.1  Sentry configured for client-side errors
 □ 4.2  Sentry configured for server-side errors

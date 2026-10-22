@@ -42,9 +42,10 @@ Against production, not a preview URL.
   a host dashboard) is a finding. Where headers are set depends on the host: see
   the hosting-model table in B6.
 - **If an AI builder previews the app inside an iframe**, check the preview host
-  too, and confirm it sends **no** framing header (`--expect` with
-  `"x-frame-options": null`). Framing protection belongs on production hosts
-  only; on the preview host it blanks the builder's editor.
+  too, with `--preview`: there, a header that blocks framing is the finding.
+  Framing protection belongs on production hosts only; on the preview host it
+  blanks the builder's editor. Production hosts are always audited without
+  `--preview`.
 - **A protected route while signed out** returns a redirect, not content. Check
   the redirect *preserves the intended destination* — a bare `/login` with no
   `redirectTo` is a UX bug that only appears in production.

@@ -1,7 +1,7 @@
 {
   "generatedBy": "scripts/extract-rubric.ts",
   "files": {
-    "rubric-web.md": "56b26f7737f41c10783e8723f787893e84c3df9df91f1d91ffaeff1bbb05cb07",
-    "rubric-mobile.md": "a06719a3f89b2e3ab33b33064cdfd9d892d64d0195193bd794067c4fc02bed6d"
+    "rubric-web.md": "7ae2b18fba9813bdf65473485559c59dfea0043ba5718291a1ec9faf7d52a1da",
+    "rubric-mobile.md": "fe18b78386392c90419b6b2a2b00d9568ec6301595d1ce792bcd34b7b0f0bcd8"
   }
 }

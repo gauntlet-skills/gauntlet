@@ -111,10 +111,19 @@ MSYS_NO_PATHCONV=1 node gates/check-headers.mjs https://your-app.com / --expect 
 **Framing protection on production only, if an AI builder previews the app.**
 Builders such as Lovable render previews inside an iframe, so `frame-ancestors
 'none'` or `X-Frame-Options: DENY` on every host blanks the builder's own
-editor. Apply framing protection on production hosts only, and pin that with a
-check that a preview host gets **no** framing header: an `--expect` file with
-`"x-frame-options": null` run against the preview URL fails if the header
-appears there. (FRAME will still be reported on the preview, which is expected.)
+editor. Apply framing protection on production hosts only, and audit the two
+kinds of host separately:
+
+```
+MSYS_NO_PATHCONV=1 node gates/check-headers.mjs https://your-app.com /             # production: missing framing = FRAME
+MSYS_NO_PATHCONV=1 node gates/check-headers.mjs https://preview.example / --preview # preview: blocking framing = PREVIEW-FRAMED
+```
+
+`--preview` changes only the framing check: `X-Frame-Options`, or a
+`frame-ancestors` limited to `'none'`/`'self'`, becomes the finding, and a
+`frame-ancestors` that lists the builder's origin passes. Every other check runs
+exactly as on production, so it cannot be used to quiet a real finding. Never
+run it against a production host. `gates/canary-headers.mjs` pins both sides.
 
 **A Report-Only CSP is reported as report-only, not missing.** That keeps a
 staged rollout visible; the finding stays open until the policy is enforced.

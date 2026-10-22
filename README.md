@@ -227,7 +227,8 @@ branch and had never run.
 - `gates/check-headers.mjs` — audits the deployed HTTP surface, which is the only
   place platform-injected headers are visible. `--expect <file>` compares the
   live headers with a committed policy, to catch drift between the repo and a CDN
-  rule or host dashboard. `gates/canary-headers.mjs` proves it can fail
+  rule or host dashboard; `--preview` audits an AI builder's preview host, where
+  framing must be allowed. `gates/canary-headers.mjs` proves both can fail
 - `gates/GATES.md` — why a gate you have not seen fail is not a gate
 
 ## Honest limits

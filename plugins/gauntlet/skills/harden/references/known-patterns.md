@@ -181,7 +181,7 @@ writing a header fix, find which layer actually serves the response (see B6).
 **Framing protection that blanks the builder.** AI builders show previews inside
 an iframe, so `frame-ancestors 'none'` on every host breaks the builder's own
 editor. Apply it on production hosts only, and pin that with a test that checks
-a preview host gets no framing header.
+a preview host gets no framing header (`gates/check-headers.mjs --preview`).
 
 ---
 
