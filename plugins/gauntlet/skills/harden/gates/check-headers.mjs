@@ -20,11 +20,58 @@
  *   check-headers.mjs https://example.com                    # audits /
  *   check-headers.mjs https://example.com /pricing /api/health
  *   check-headers.mjs https://example.com --json
+ *   check-headers.mjs https://example.com / --expect headers.expected.json
+ *
+ * --expect <file> compares the live headers with a committed policy, which
+ * catches drift between the repo and whatever layer actually serves the
+ * response (a CDN rule, a host dashboard). The file is JSON, header name to
+ * expected value; null means the header must be ABSENT, which is how you pin
+ * "a preview host sends no framing header":
+ *
+ *   { "content-security-policy": "default-src 'self'; frame-ancestors 'none'",
+ *     "x-frame-options": "DENY" }
+ *
+ * Route classes come from Next.js / Vercel markers (x-nextjs-prerender,
+ * x-vercel-cache). On any other host nothing is marked static, so every non-API
+ * route is judged as dynamic. That is correct for an SPA, and stricter than
+ * necessary for a static site on another CDN; the report says when it happened.
  */
+import { readFileSync } from 'node:fs';
 
 const argv = process.argv.slice(2);
 const asJson = argv.includes('--json');
-const positional = argv.filter((a) => !a.startsWith('--'));
+
+// Read --expect by hand, and refuse a repeat: with two, a parser that takes the
+// first would silently ignore the one the caller appended (known-patterns.md).
+const expectAt = argv.flatMap((a, i) => (a === '--expect' ? [i] : []));
+if (expectAt.length > 1) {
+  console.error('ERROR: --expect given more than once. Refusing to guess which policy you meant.');
+  process.exit(2);
+}
+let expected = null;
+if (expectAt.length === 1) {
+  const file = argv[expectAt[0] + 1];
+  if (!file || file.startsWith('--')) {
+    console.error('ERROR: --expect needs a file path.');
+    process.exit(2);
+  }
+  try {
+    expected = JSON.parse(readFileSync(file, 'utf8'));
+  } catch (err) {
+    console.error(`ERROR: could not read --expect file "${file}": ${err.message}`);
+    console.error('       Refusing to report a pass against a policy that was never loaded.');
+    process.exit(2);
+  }
+  const ok = expected && typeof expected === 'object' && !Array.isArray(expected) &&
+    Object.keys(expected).length > 0 &&
+    Object.values(expected).every((v) => v === null || typeof v === 'string');
+  if (!ok) {
+    console.error(`ERROR: --expect file "${file}" must be a non-empty JSON object of header name to string or null.`);
+    process.exit(2);
+  }
+  expected = Object.fromEntries(Object.entries(expected).map(([k, v]) => [k.toLowerCase(), v]));
+}
+const positional = argv.filter((a, i) => !a.startsWith('--') && !expectAt.includes(i - 1));
 const base = positional[0];
 const paths = positional.length > 1 ? positional.slice(1) : ['/'];
 
@@ -118,6 +165,13 @@ const CHECKS = [
     applies: (cls) => cls !== 'api' && cls !== 'redirect',
     run(h, path) {
       const v = h.get('content-security-policy');
+      // A Report-Only policy enforces nothing, but calling it "missing" hides a
+      // staged rollout that is under way. Report what is actually there.
+      if (!v && h.get('content-security-policy-report-only')) {
+        return add('MEDIUM', path, 'CSP',
+          'Content-Security-Policy is report-only (not enforced)',
+          'A staged rollout: violations are reported but nothing is blocked. Promote it to Content-Security-Policy once the reports are clean.');
+      }
       if (!v) return add('MEDIUM', path, 'CSP', 'Content-Security-Policy missing');
       if (/default-src[^;]*\*/.test(v)) add('MEDIUM', path, 'CSP', "CSP default-src contains a wildcard");
       if (/script-src[^;]*'unsafe-eval'/.test(v)) add('MEDIUM', path, 'CSP', "CSP allows 'unsafe-eval'");
@@ -207,6 +261,27 @@ const CHECKS = [
   },
 ];
 
+// Compare as the browser would: directive order and spacing in a CSP do not
+// change its meaning.
+const normalize = (name, v) =>
+  name === 'content-security-policy' || name === 'content-security-policy-report-only'
+    ? v.split(';').map((d) => d.trim().replace(/\s+/g, ' ')).filter(Boolean).sort().join('; ')
+    : v.trim().replace(/\s+/g, ' ');
+
+function checkExpected(h, path, cls) {
+  if (!expected || cls === 'redirect') return;
+  for (const [name, want] of Object.entries(expected)) {
+    const got = h.get(name);
+    if (want === null) {
+      if (got !== null) add('MEDIUM', path, 'EXPECT-DRIFT', `${name} is present but the policy says it must be absent`, `Live: ${got}`);
+    } else if (got === null) {
+      add('MEDIUM', path, 'EXPECT-DRIFT', `${name} is missing but the policy expects it`, `Expected: ${want}`);
+    } else if (normalize(name, got) !== normalize(name, want)) {
+      add('MEDIUM', path, 'EXPECT-DRIFT', `${name} differs from the committed policy`, `Expected: ${want}\n           Live:     ${got}`);
+    }
+  }
+}
+
 // ── Validate paths ──────────────────────────────────────────────────────────
 // Git Bash / MSYS rewrites a bare "/" argument into a Windows filesystem path
 // ("C:/Program Files/Git/"). Left unchecked, the audit runs against a mangled
@@ -224,6 +299,7 @@ for (const p of paths) {
 
 // ── Fetch ───────────────────────────────────────────────────────────────────
 const results = [];
+let sawFrameworkMarkers = false;
 for (const p of paths) {
   const url = origin + (p.startsWith('/') ? p : `/${p}`);
   let res;
@@ -242,6 +318,10 @@ for (const p of paths) {
   for (const c of CHECKS) {
     if (c.applies(cls)) c.run(res.headers, p, cls, res.status);
   }
+  checkExpected(res.headers, p, cls);
+  if (['x-nextjs-prerender', 'x-vercel-cache', 'x-vercel-id'].some((k) => res.headers.get(k))) {
+    sawFrameworkMarkers = true;
+  }
 }
 
 if (results.length === 0) {
@@ -253,12 +333,20 @@ if (results.length === 0) {
 const ORDER = { CRITICAL: 0, HIGH: 1, MEDIUM: 2, LOW: 3 };
 findings.sort((a, b) => ORDER[a.sev] - ORDER[b.sev]);
 
+const notes = [];
+if (!sawFrameworkMarkers && results.some((r) => r.cls === 'dynamic')) {
+  notes.push('No Next.js/Vercel markers seen, so no route could be classed static; non-API routes were judged as dynamic.');
+}
+if (expected) notes.push(`Compared against ${Object.keys(expected).length} expected header(s) from --expect.`);
+
 if (asJson) {
-  console.log(JSON.stringify({ origin, audited: results, findings }, null, 2));
+  console.log(JSON.stringify({ origin, audited: results, notes, findings }, null, 2));
 } else {
   console.log(`check-headers: ${origin}\n`);
   for (const r of results) console.log(`  ${String(r.status).padEnd(4)} ${r.cls.padEnd(8)} ${r.path}`);
   console.log('');
+  for (const n of notes) console.log(`  note: ${n}`);
+  if (notes.length) console.log('');
   if (findings.length === 0) {
     console.log('  no findings');
   } else {
@@ -276,4 +364,6 @@ console.log(
   `${findings.length} finding(s) across ${results.length} route(s) — ` +
     `${blocking.length} blocking (CRITICAL/HIGH).`
 );
-process.exit(findings.length > 0 ? 1 : 0);
+// exitCode, not exit(): process.exit() with fetch's keep-alive sockets still open
+// can abort Node on Windows (0xC0000409), turning every result into a crash.
+process.exitCode = findings.length > 0 ? 1 : 0;

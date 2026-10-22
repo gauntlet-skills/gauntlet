@@ -2,7 +2,7 @@
   "generatedBy": "scripts/extract-build-specs.ts",
   "files": {
     "prompt-specs.md": "50395ea6330d526b5e6ad027eebb42b7c75b1ae984cb316b56dd6737aa1c4fb0",
-    "standing-rules.md": "72d5a2ad99632760677a3bb0f10b7a49e02a1fd8d6bb813a930306e9d8ef1bcb",
-    "spot-checks-generated.md": "ebe324799908b2612d022ab8768ba3b27ebd2a8fcb154ffc88ce16e82bc0c901"
+    "standing-rules.md": "fa11864845e2a9e4366a576fd5b7e242958f6cd8ee112462312ab74c6e292cb7",
+    "spot-checks-generated.md": "fdedb30c31294584937614c68a402dce04d591ac5de4072bd67284ca250a4cf1"
   }
 }

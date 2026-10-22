@@ -59,7 +59,7 @@ Audit the Stripe integration in <YOUR APP>.
 Confirm correct application state after each scenario.
 ```
 
-<!-- source-sha256: 5c5d8506ffd4 -->
+<!-- source-sha256: 36cca91795a5 -->
 
 That comment is the hash of the source this was built from. Run
 `gates/check-extracted.mjs` to verify this file has not been edited since.

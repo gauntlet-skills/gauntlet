@@ -164,6 +164,18 @@ the thing actually serving users.
 Use both. They catch different classes of defect, and neither substitutes for the
 other.
 
+### review vs your host's built-in review
+
+Claude Code now ships `/code-review`, with effort levels and a cloud multi-agent
+mode. On Claude Code it is a fine default for routine diffs. `/gauntlet:review`
+is still the right choice when you are on **Codex** or another host without a
+built-in review, when the code **must not leave your session**, when you want to
+set the reviewer dimensions and skeptic votes yourself, or when you want a second
+review not anchored on the first.
+
+Neither one answers the launch question. A clean diff review, from any tool,
+means the change is sound, not that the app is ready. That is what **harden** is for.
+
 ## What makes this different
 
 Most build checklists are somebody's opinion. This one comes from running the
@@ -213,7 +225,9 @@ branch and had never run.
 - The full analyzer rubric — 144 web items / 8 categories, 162 mobile / 11
 - `gates/run-gate.sh` — the mechanical gate
 - `gates/check-headers.mjs` — audits the deployed HTTP surface, which is the only
-  place platform-injected headers are visible
+  place platform-injected headers are visible. `--expect <file>` compares the
+  live headers with a committed policy, to catch drift between the repo and a CDN
+  rule or host dashboard. `gates/canary-headers.mjs` proves it can fail
 - `gates/GATES.md` — why a gate you have not seen fail is not a gate
 
 ## Honest limits
@@ -223,7 +237,10 @@ branch and had never run.
   completed anywhere. Both files say so at the top.
 - **The stack is opinionated** — Next.js, Supabase, Stripe, Vercel. The phase
   structure and the gate doctrine transfer anywhere; the specific checks assume
-  that stack.
+  that stack. One outside team ran it on Supabase + Cloudflare Workers + Vite
+  SPAs built with Lovable; what they had to adapt is now in B6 (where headers
+  live per hosting model) and in the build skill (rules for builders that never
+  read `CLAUDE.md`).
 - **The rubric grades a spec, not compiled code.** It is a checklist for a
   reviewer, not a static analyser.
 - **Nothing here replaces a professional audit** for a regulated product.

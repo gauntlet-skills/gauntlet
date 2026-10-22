@@ -63,6 +63,22 @@ Pattern:
 Step 4 matters as much as step 3. A gate that fails on everything is also broken;
 it just gets disabled instead of trusted.
 
+**Check that the planted defect actually landed.** A mutation that silently did
+not apply turns the "bad" run into a clean run. Plant from a backup copy, grep
+for the planted string before running the gate, and restore from the backup
+afterwards, not from `git checkout`.
+
+## Ways a gate reports "could not run" as clean
+
+Each of these was live in a repo that already took gates seriously. Details in
+`references/known-patterns.md` under "Gates that pass without checking".
+
+- An unreachable comparison base treated as "nothing changed."
+- A duplicated flag where the first value silently wins.
+- Errors written into the report as rows, then exit `0`.
+- A skip condition (no `git`, no network, no build output) that also fires in CI.
+  When `CI` is set, a skip is exit `2`.
+
 ## Two kinds of gate
 
 **Mechanical** — a command with an exit code. Typecheck, lint, tests, build,

@@ -1,12 +1,12 @@
 # Web scaffold rubric
 
 **144 items · 8 categories · 27 marked `[Critical]`.**
-Analyzer prompt version `v8`.
+Analyzer prompt version `v9`.
 
 Generated from the analyzer source by `scripts/extract-rubric.ts`, not
 transcribed. Regenerate rather than hand-editing.
 
-<!-- source-sha256: 92612e29e472 -->
+<!-- source-sha256: ca7a6f0e5053 -->
 
 That comment is the hash of the source this was built from. It changes whenever
 the source does, so two copies with the same hash came from the same source. Run
@@ -121,8 +121,8 @@ explicitly stated in the schema specification so Claude Code does not add an unv
 
 □ 2.1  [Critical] Stripe webhook uses raw body: await request.text() — NOT request.json()
 □ 2.2  [Critical] Stripe webhook signature verification with stripe.webhooks.constructEvent
-□ 2.3  [Critical] Webhook idempotency: webhook_events table checked BEFORE processing
-□ 2.4  Webhook idempotency: new event inserted to webhook_events BEFORE processing
+□ 2.3  [Critical] Webhook idempotency: event claimed by INSERT into webhook_events (UNIQUE event id) BEFORE processing; a conflict returns 200 without processing
+□ 2.4  Webhook idempotency: no SELECT-then-process duplicate check (concurrent retries both pass a read)
 □ 2.5  Handles checkout.session.completed
 □ 2.6  Handles customer.subscription.created
 □ 2.7  Handles customer.subscription.updated

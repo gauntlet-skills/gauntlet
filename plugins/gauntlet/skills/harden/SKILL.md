@@ -7,8 +7,10 @@ license: MIT
 # The Launch Gauntlet
 
 A phased hardening process for taking a project from "it works" to "it can face
-real users and real money." Derived from real runs across medcomplex-pro,
-coachflow, globalenglishtech, and cyberjobs-pro.
+real users and real money." The phases were derived from full runs on four
+projects (medcomplex-pro, coachflow, globalenglishtech and cyberjobs-pro).
+`references/known-patterns.md` adds defects from gauntlet and waypoint (six
+projects in all) and from one outside team's production stack.
 
 Companion skill: the **build** skill produces the numbered build prompts that
 get you a working app. This one starts where that finishes.
@@ -48,8 +50,8 @@ Skipping a phase is a decision that gets recorded, not a silent omission.
 
 ## The loop
 
-Per your standing build sequence — build → checkpoint → fix blockers → commit on
-a branch → merge → push:
+Every phase runs the same sequence, which mirrors the build: build → checkpoint
+→ fix blockers → commit on a branch → merge → push.
 
 1. **Run the phase audit.** Read actual code and actual command output. Never
    grade from memory, from the spec, or from what a previous phase claimed.

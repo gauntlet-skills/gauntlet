@@ -19,7 +19,7 @@ rules for handling keys. Ten minutes, and it removes most of what goes wrong.
 Open Claude Code in an empty folder and type:
 
 ```
-Use the gauntlet-build skill. I want to build: <one paragraph describing your app>
+Use the build skill. I want to build: <one paragraph describing your app>
 
 Who it's for: <who>
 What they can do: <the 3–5 things a user can actually do>
@@ -27,6 +27,8 @@ What I charge: <free / one price / tiers — or "decide for me">
 ```
 
 That's it. That is the whole first step.
+
+The skill is called `build`; the others are `harden` and `review`. Invocation differs by host: in Claude Code you can type `/gauntlet:build` instead of "Use the build skill", and in Codex, `$build`.
 
 **Write the paragraph like you're describing it to a friend.** Not a spec, not
 jargon. "A tool where dog walkers can log walks and send clients a photo summary
@@ -86,8 +88,10 @@ When the last checkpoint passes, you have a working app. It is not yet an app yo
 should point strangers at.
 
 ```
-Use the gauntlet-harden skill. Run Phase A on this project.
+Use the harden skill. Run Phase A on this project.
 ```
+
+(Invocation differs by host: `/gauntlet:harden` in Claude Code, `$harden` in Codex.)
 
 That runs the A–G cascade: payments and data, security, the first-time user
 funnel, SEO and legal, pre-launch verification, then post-deploy. Each phase ends

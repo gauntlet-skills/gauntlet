@@ -35,7 +35,16 @@ Against production, not a preview URL.
   ```
   MSYS_NO_PATHCONV=1 node gates/check-headers.mjs https://your-app.com / /login /api/health
   ```
-  This is the only place platform-injected headers are visible.
+  This is the only place platform-injected headers are visible. Run it against
+  **every production hostname**, not one; a config file can reach staging and
+  miss production entirely. If the repo commits a header policy, add
+  `--expect <file>` so drift between the repo and the serving layer (a CDN rule,
+  a host dashboard) is a finding. Where headers are set depends on the host: see
+  the hosting-model table in B6.
+- **If an AI builder previews the app inside an iframe**, check the preview host
+  too, and confirm it sends **no** framing header (`--expect` with
+  `"x-frame-options": null`). Framing protection belongs on production hosts
+  only; on the preview host it blanks the builder's editor.
 - **A protected route while signed out** returns a redirect, not content. Check
   the redirect *preserves the intended destination* — a bare `/login` with no
   `redirectTo` is a UX bug that only appears in production.
@@ -120,7 +129,7 @@ Judgment — Phase G does not pass until:
 
 - [ ] Deployed release hash matches the intended commit
 - [ ] All migrations applied and verified, not just the latest
-- [ ] Header audit run against the live origin
+- [ ] Header audit run against every production hostname (and against the committed policy, if one exists)
 - [ ] Signup completed end-to-end with a real email that **landed in an inbox**
 - [ ] Payment completed and refunded in live mode *(if applicable)*
 - [ ] Auth site URL and redirect allow-list verified against production

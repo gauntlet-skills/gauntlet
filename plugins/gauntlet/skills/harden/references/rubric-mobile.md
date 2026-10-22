@@ -1,7 +1,7 @@
 # Mobile scaffold rubric
 
 **162 items · 11 categories · 4 marked `[Critical]`.**
-Analyzer prompt version `v8`.
+Analyzer prompt version `v9`.
 
 Generated from the analyzer source by `scripts/extract-rubric.ts`, not
 transcribed. Regenerate rather than hand-editing.

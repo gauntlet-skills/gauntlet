@@ -85,6 +85,46 @@ credentialed requests, so nothing authenticated can be read — but it is real,
 and an external scanner will keep reporting it until it is pinned to your own
 origin in `next.config.ts`.
 
+**Audit every production host, not the one the config file names.** A review
+that reads `vercel.json` sees the headers staging gets. One outside team's
+review did exactly that and recorded clickjacking protection as present, while
+all four production hosts were served by a different host and sent no framing
+header at all. Run the check against each hostname users actually reach.
+
+**Where headers live depends on the hosting model.** Find which layer serves the
+response before you write the fix:
+
+| Hosting model | Where response headers are set |
+|---|---|
+| Framework on a server/function host (Next.js on Vercel) | Framework config (`next.config.ts` `headers()`) or `vercel.json` |
+| App with its own server entry (Workers, TanStack Start, Express) | The request handler or middleware in that entry |
+| Static SPA on a managed host that exposes no header settings | Nowhere in the app. Put a CDN rule in front in proxy mode (e.g. a Cloudflare response-header rule) |
+| A host you do not control and cannot proxy | Nowhere. Record it as an operator blocker with the host named, not as a code fix |
+
+Then commit the intended policy as a JSON file and audit against it, so drift
+between the repo and a CDN rule or a host dashboard shows up as a finding:
+
+```
+MSYS_NO_PATHCONV=1 node gates/check-headers.mjs https://your-app.com / --expect security-headers.json
+```
+
+**Framing protection on production only, if an AI builder previews the app.**
+Builders such as Lovable render previews inside an iframe, so `frame-ancestors
+'none'` or `X-Frame-Options: DENY` on every host blanks the builder's own
+editor. Apply framing protection on production hosts only, and pin that with a
+check that a preview host gets **no** framing header: an `--expect` file with
+`"x-frame-options": null` run against the preview URL fails if the header
+appears there. (FRAME will still be reported on the preview, which is expected.)
+
+**A Report-Only CSP is reported as report-only, not missing.** That keeps a
+staged rollout visible; the finding stays open until the policy is enforced.
+
+**Off Vercel, every non-API route is judged as dynamic.** The route classifier
+keys on Next.js and Vercel markers (`x-nextjs-prerender`, `x-vercel-cache`). On
+other hosts nothing is marked static, and the report says so. That is correct
+for an SPA; for a static site on another CDN it means a wildcard ACAO is graded
+HIGH where LOW would be fair. Downgrade it by hand, with the reason written down.
+
 **Judge severity by route class, not by header name.** A wildcard ACAO on
 `/api/*` is HIGH; on a static marketing page it is LOW. External scanners
 routinely report the second as Medium because they do not model the difference.

@@ -48,6 +48,31 @@ each. Alongside it the build usually wants:
 
 - **CLAUDE.md** — standing rules the agent re-reads every session
 - **SPEC.md** — the app specification the prompts refer back to
+- **BUILDER_RULES.md** — only when part of the app is built in an AI builder
+  that never reads repo docs (see below)
+
+### Builders that don't read CLAUDE.md
+
+Some AI builders (Lovable, for one) never read files in the repo. They follow
+only their own project or workspace knowledge settings, so standing rules
+written only to `CLAUDE.md` never reach them. If the user builds any part of the
+app in such a tool, also emit a short **BUILDER_RULES.md** for them to paste
+into the builder's project knowledge: one rule per line, each with its reason,
+under about twenty lines. Long prose gets skimmed or truncated there.
+
+Derive it from the standing rules that apply to that builder's stack. For a
+Supabase app, a subset that has worked in practice:
+
+```
+REVOKE the default ALL grants on every new public table. Supabase grants them to anon and authenticated; RLS alone does not undo it.
+Give every storage bucket its own policies. Table RLS does not cover storage.
+Edge functions verify the JWT unless deliberately public. Mark a public one with a comment saying why.
+Never commit service-role keys. They bypass RLS entirely.
+Stripe webhooks insert the event id first and treat a unique-constraint conflict as a duplicate. A read-then-insert check lets retries through.
+```
+
+Keep `CLAUDE.md` as the full source; the builder file is a copy of a subset,
+so say at the top which rules it carries and that `CLAUDE.md` wins on conflict.
 
 **Generate one prompt per model call.** Trying to emit the whole document in a
 single response truncates it, and a truncated build doc fails silently — the
@@ -159,6 +184,11 @@ executable prompts live somewhere else or not yet at all.
 
 A checkpoint item must be **verifiable by looking**. "Auth works" is not a
 checkpoint item. "`POST /api/auth/login` returns 401 with no session" is.
+
+That is also exactly the shape a QA runsheet needs. Tell the user each
+checkpoint item can become a QA step: the action, the expected result, and
+where to look. If they have testers, the checkpoints are the first draft of the
+regression runsheet, and the discipline carries on after the build ends.
 
 ## Handoff
 
