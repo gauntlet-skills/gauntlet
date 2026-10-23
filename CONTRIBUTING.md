@@ -97,8 +97,9 @@ Rough order of usefulness:
 
 I'd rather tell you than have you find them:
 
-- **Phases F (app store) and G (post-deploy) are drafts.** F was written but never
-  run end to end; G has never completed anywhere. Both files say so at the top.
+- **Phase F (app store) is a draft.** It was written but never run end to end,
+  and its file says so at the top. G (post-deploy) has completed full runs on
+  several live projects.
 - **Opinionated stack** — Next.js, Supabase, Stripe, Vercel. The phase structure
   and gate ideas transfer anywhere; the specific checks assume that stack.
 - **Windows/Git Bash path weirdness.** If a command fails with a path like
