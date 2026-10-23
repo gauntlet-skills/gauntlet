@@ -3,12 +3,11 @@
 **BLOCKED until the project is actually live.** Not N/A — it runs *after*
 go-live. Marking it N/A because you have not deployed is how it never gets run.
 
-> **First real run: 2026-08-10.**
-> Partial — the credentialed flows were not run — but it found a HIGH on its
-> first pass: a production health endpoint returning 503, caused by
-> configuration rather than code. The notes below marked *"from the first run"*
-> come from that; the rest is still derived from a launch-day runbook and from
-> cutover failures on other projects.
+> **Grounded in real runs.** G has completed full runs on several live
+> projects. The first run (2026-08-10) was partial — the credentialed flows were
+> not run — but it found a HIGH on its first pass: a production health endpoint
+> returning 503, caused by configuration rather than code. The notes below
+> marked *"from the first run"* come from that one.
 
 ## Why this phase exists
 

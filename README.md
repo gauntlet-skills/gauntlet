@@ -233,9 +233,9 @@ branch and had never run.
 
 ## Honest limits
 
-- **Phases A–E are grounded in completed runs. F and G are not.** Store
-  submission has been written but never run end to end; post-deploy has never
-  completed anywhere. Both files say so at the top.
+- **Phases A–E and G are grounded in completed runs. F is not.** Post-deploy
+  (G) has completed full runs on several live projects. Store submission (F) has
+  been written but never run end to end, and its file says so at the top.
 - **The stack is opinionated** — Next.js, Supabase, Stripe, Vercel. The phase
   structure and the gate doctrine transfer anywhere; the specific checks assume
   that stack. An outside team ran it on a non-Vercel production stack; what they
