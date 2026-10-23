@@ -238,8 +238,8 @@ branch and had never run.
   completed anywhere. Both files say so at the top.
 - **The stack is opinionated** — Next.js, Supabase, Stripe, Vercel. The phase
   structure and the gate doctrine transfer anywhere; the specific checks assume
-  that stack. One outside team ran it on Supabase + Cloudflare Workers + Vite
-  SPAs built with Lovable; what they had to adapt is now in B6 (where headers
+  that stack. An outside team ran it on a non-Vercel production stack; what they
+  had to adapt is now in B6 (where headers
   live per hosting model) and in the build skill (rules for builders that never
   read `CLAUDE.md`).
 - **The rubric grades a spec, not compiled code.** It is a checklist for a

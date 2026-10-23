@@ -1,8 +1,8 @@
 # Known patterns
 
 Defects found in real gauntlet runs across six production projects, plus entries
-reported by an outside team that ran the gauntlet on a Supabase + Cloudflare Workers
-stack. Every entry here was live in a project that had already passed something.
+reported by an outside team that ran the gauntlet on a non-Vercel production stack.
+Every entry here was live in a project that had already passed something.
 
 Check these first. They recur because they come from how the stack behaves, not
 from a particular team's mistakes — which means your app probably has some of
