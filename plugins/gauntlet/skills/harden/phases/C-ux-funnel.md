@@ -1,7 +1,7 @@
 # Phase C — First-time user funnel
 
 Can someone who has never seen this app succeed with it? Phase C consistently
-produces the highest-value findings in real runs — coachflow's summary recorded
+produces the highest-value findings in real runs — one run's summary recorded
 that the biggest issues were **product/flow, not security**.
 
 Steps: **C1** funnel simulation · **C2** launch review · **C3** post-build audit
@@ -17,15 +17,15 @@ right, when the network fails, and when they have no data yet.
 
 The finding classes that showed up in real runs:
 
-- **The payoff action silently does nothing.** medcomplex's onboarding walked the
-  user through adding a medication; it never scheduled, and the dashboard then
-  said "no medications." The single worst finding of the entire gauntlet, and
+- **The payoff action silently does nothing.** One app's onboarding walked the
+  user through adding their first item; it never saved, and the dashboard then
+  said there were none. The single worst finding of the entire gauntlet, and
   invisible to every security phase.
 - **Blank screen on fetch failure.** An error state that renders nothing reads as
   "your data is gone." Check every screen's failure branch, not just its
   happy path.
 - **Fabricated data in the UI.** A chart or ring showing placeholder numbers that
-  look real. Users trust it. medcomplex shipped a weekly adherence ring computed
+  look real. Users trust it. One app shipped a weekly progress ring computed
   from nothing.
 - **Verification forcing a re-login.** A gratuitous dead end at the exact moment
   of highest drop-off.

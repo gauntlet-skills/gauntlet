@@ -6,7 +6,7 @@ because it manufactures confidence.
 
 ## The failure this doctrine exists to prevent
 
-medcomplex-pro's `scripts/check-secrets.sh` printed `OK: No hardcoded secrets
+One project's `scripts/check-secrets.sh` printed `OK: No hardcoded secrets
 found` and exited 0 for the entire life of the repository.
 
 The excludes array was double-quoted, so bash did not strip the backslash from
@@ -47,7 +47,7 @@ on a check whose silence you intend to interpret.
 
 Once you have proven a gate fails, keep the proof. A canary test that lives in the
 test suite prevents the gate from silently rotting when someone edits it later.
-medcomplex has `tests/unit/check-secrets.test.ts` holding deliberately key-shaped
+That project now has `tests/unit/check-secrets.test.ts` holding deliberately key-shaped
 strings; the scanner excludes that file by path so the canary does not trip the
 real scan.
 

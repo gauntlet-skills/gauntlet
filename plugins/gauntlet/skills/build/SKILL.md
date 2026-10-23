@@ -31,8 +31,8 @@ Full walkthrough for a first-timer: `QUICKSTART.md`. Never used a terminal?
 
 Produces a **BUILD.md**: a numbered sequence of build prompts an agent executes
 one at a time, each ending in a checkpoint that can actually be checked. Derived
-from the Gauntlet scaffold generator and from Waypoint, which ran a 0–16 sequence
-to completion.
+from the Gauntlet scaffold generator and from a real build that ran a 0–16
+sequence to completion.
 
 Companion skill: the **harden** skill runs the A–G hardening cascade *after* the build.
 This skill stops at a built, tested, deployable app. Do not inline the post-build
@@ -139,7 +139,7 @@ fails at runtime.
 Small audits baked **inline, under the prompt they apply to** — not batched at
 the end. See `reference/spot-checks.md`.
 
-This is the step most often skipped. Waypoint's build plan omitted them and had
+This is the step most often skipped. One real build plan omitted them and had
 to retrofit all four against finished code, which found real defects (a missing
 `invoice.paid` handler, absent Stripe idempotency keys) that would have been
 cheaper to catch at the prompt that introduced them.
@@ -157,7 +157,7 @@ first needs its key. A builder hits a wall when a prompt demands a credential
 they haven't provisioned; this lets them get them in advance.
 
 State explicitly where a placeholder works and where a live key is required —
-Waypoint noted Sentry was "inert with a placeholder," which is exactly the detail
+one real plan noted Sentry was "inert with a placeholder," which is exactly the detail
 that keeps a build moving.
 
 ## The gate
@@ -196,6 +196,6 @@ When the last tail prompt's checkpoint passes, the build is done and the
 **harden** skill takes over for A–G hardening.
 
 Do not compress the post-build library into a single "run the hardening" prompt.
-Waypoint's plan did exactly that — collapsing B1–B6 into one step and omitting
+One real plan did exactly that — collapsing B1–B6 into one step and omitting
 C through G entirely — and had to reconstruct the full sequence afterward. The
 build plan's last prompt should hand off, not summarize.

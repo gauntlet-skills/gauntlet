@@ -10,7 +10,7 @@ Steps: **E1** security checklist · **E2** dependencies · **E3** gap sweep · *
 ## E1 — Security checklist spot check
 
 A fixed checklist, each item PASS / FAIL / N-A with the evidence. Report as counts
-(medcomplex: 11 PASS / 2 N-A / 0 FAIL) so it is comparable across runs.
+(e.g. 11 PASS / 2 N-A / 0 FAIL) so it is comparable across runs.
 
 Items worth including: RLS coverage, ownership derived from session, auth on every
 protected route, sanitized client errors, secrets in env only, CORS allow-list,

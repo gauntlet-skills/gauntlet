@@ -46,7 +46,7 @@ if (src.trim() === '') {
 // ── Parse ───────────────────────────────────────────────────────────────────
 // A prompt is "## Prompt <id> — title"; its body runs to the next "## Prompt"
 // or EOF. Checkpoints are "### Checkpoint <id>" inside that span.
-// Accept ##/###/#### — real plans vary in heading depth (Waypoint uses ###),
+// Accept ##/###/#### — real plans vary in heading depth (some use ###),
 // and rejecting on depth alone would flag a valid document as unparseable.
 // Separator class includes ':' — the Gauntlet generator emits
 // "## PROMPT 1: Spec validation", and requiring a dash made this exit 2 on the

@@ -1,12 +1,12 @@
 # Mobile scaffold rubric
 
 **162 items · 11 categories · 4 marked `[Critical]`.**
-Analyzer prompt version `v10`.
+Analyzer prompt version `v11`.
 
 Generated from the analyzer source by `scripts/extract-rubric.ts`, not
 transcribed. Regenerate rather than hand-editing.
 
-<!-- source-sha256: cad757e3a7c2 -->
+<!-- source-sha256: 0825ba8f9087 -->
 
 That comment is the hash of the source this was built from. It changes whenever
 the source does, so two copies with the same hash came from the same source. Run
@@ -274,7 +274,7 @@ work. An audit that finds nothing on a fresh scaffold has not been run properly.
 □ 9.5  All Edge Functions deployed before app submitted to stores
         (deployment command documented)
 □ 9.6  Supabase auth redirect URL includes app deep link scheme
-        (e.g., proteinfirst://) to handle email link callbacks
+        (e.g., yourapp://) to handle email link callbacks
 □ 9.7  Seed scripts documented and ordered correctly
         (foods → branded foods → recipes, or equivalent)
 □ 9.8  Seed scripts are idempotent (safe to run twice without duplicate data)
