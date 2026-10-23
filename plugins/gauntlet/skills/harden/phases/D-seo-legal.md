@@ -48,7 +48,7 @@ Steps: **D1** SEO · **D2** images · **D3** legal · **D4** cookies
 
 - Consent banner before any non-essential cookie is set — the order matters.
 - Preferences persist and are re-openable *after* dismissal. A banner you can
-  never bring back is a compliance gap; medcomplex added a footer link for this.
+  never bring back is a compliance gap; a footer link is the usual fix.
 - Declining actually disables the tracking, rather than just hiding the banner.
 
 ## Gate

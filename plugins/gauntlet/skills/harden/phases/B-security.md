@@ -16,19 +16,19 @@ Read code. Group findings by severity, not by subsystem.
 Surfaces that produced real findings in past runs:
 
 - **Auth** — lockout logic (an expired lockout that immediately re-locks is a
-  permanent, unrecoverable lockout: medcomplex B1-AUTH-1), anti-enumeration on
+  permanent, unrecoverable lockout), anti-enumeration on
   reset, consistent response timing, IP-based throttling as the *primary* control
   with per-email lockout secondary — the reverse lets an attacker lock out a
   victim by guessing their email.
 - **Subprocessor disclosure** — every third party that touches user data must be
   named in the privacy policy. A policy that affirmatively denies a subprocessor
-  you actually use is worse than silence (medcomplex B1-SEC-1).
+  you actually use is worse than silence.
 - **Error monitoring leakage** — breadcrumbs and URLs reach the monitoring vendor
   unscrubbed. Search terms, tokens in query strings, PII in paths.
 - **Notification content** — titles and bodies land on lock screens and pass
   through APNs/FCM. Anything sensitive in them is a disclosure.
-- **Security theatre** — a feature whose copy claims verification it does not
-  perform (an app lock that checks nothing) is a HIGH, not a polish item.
+- **Security theatre** — a feature whose copy claims a protection it does not
+  actually enforce is a HIGH, not a polish item.
 - **CSRF** — fails closed, including on a missing or null `Origin`.
 - **Input validation** — schema-validated at every entry point, with generic
   messages to the client.
@@ -38,7 +38,7 @@ Surfaces that produced real findings in past runs:
 ## B2 — Fix pass
 
 Work CRITICAL then HIGH, in the order B1 recommends. Consolidate related fixes —
-medcomplex found consolidation a strict gain over one-commit-per-finding.
+Real runs found consolidation a strict gain over one-commit-per-finding.
 
 Do not fix and re-audit in the same pass. The point of B3 is fresh eyes on the
 diff.
@@ -147,7 +147,7 @@ audit does not "fix" it.
 
 **Email auth is the one that silently ruins a launch.** Without SPF/DKIM/DMARC on
 the sending domain, verification email lands in spam and no user can activate.
-It was medcomplex's highest-impact remaining blocker at E4.
+In one real run it was the highest-impact remaining blocker at E4.
 
 ## Gate
 

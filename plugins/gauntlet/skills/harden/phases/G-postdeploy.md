@@ -3,7 +3,7 @@
 **BLOCKED until the project is actually live.** Not N/A — it runs *after*
 go-live. Marking it N/A because you have not deployed is how it never gets run.
 
-> **First real run: medcomplex-pro, 2026-08-10** (`docs/G-postdeploy-verification.md`).
+> **First real run: 2026-08-10.**
 > Partial — the credentialed flows were not run — but it found a HIGH on its
 > first pass: a production health endpoint returning 503, caused by
 > configuration rather than code. The notes below marked *"from the first run"*

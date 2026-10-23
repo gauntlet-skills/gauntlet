@@ -82,7 +82,7 @@ core flow → paywall → payment.
 
 ## Adapting the sequence
 
-Real builds reorder, and that is fine when the reason is written down. Waypoint
+Real builds reorder, and that is fine when the reason is written down. One build
 moved CI earlier ("was 12; moved up — CI is overdue") and added a preview deploy
 at 13 to de-risk infrastructure before the production deploy at 16. Both were
 good calls; both were annotated in the plan.

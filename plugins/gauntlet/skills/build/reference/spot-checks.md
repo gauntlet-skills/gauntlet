@@ -49,7 +49,7 @@ The highest-value spot check in the set.
 - Idempotency on inbound: insert the event id *before* processing, so a retry
   collides on the insert. Read-then-process leaves a window.
 - Every event type the flow depends on is handled. A missing `invoice.paid` is a
-  silent revenue bug — Waypoint had exactly this, found only on retrofit.
+  silent revenue bug — one real build had exactly this, found only on retrofit.
 - Test cards run: success, decline, insufficient funds, and a 3DS challenge.
 
 ## How to place them in the document

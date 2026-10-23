@@ -17,10 +17,10 @@ Read the actual integration code, not the spec.
 - **Idempotency on writes.** Both directions: an idempotency key on outbound
   charge/checkout calls, and a `webhook_events` claim on inbound. Check the claim
   is an *atomic insert*, not read-then-process — that gap is a real finding
-  (medcomplex A1-F2) and it is wide under retry storms.
+  from a real run, and it is wide under retry storms.
 - **Out-of-order delivery.** Webhooks arrive out of order. Is there a watermark
-  or version guard, and does the happy path also honour it? medcomplex's
-  `handleCheckoutComplete` skipped the guard the other handlers used.
+  or version guard, and does the happy path also honour it? In one real run
+  the checkout-completed handler skipped the guard the other handlers used.
 - **Every event type the flow depends on is handled** — checkout completed,
   subscription created/updated/deleted, payment failed, invoice paid.
 - **Multiple providers writing one row.** Stripe + a mobile IAP provider sharing
@@ -50,7 +50,7 @@ The question is not "is there RLS" but "can user X reach user Y's row."
 ## A3 — Env and secrets audit
 
 - **Secret scanner exists, and has been proven to fail.** This is the step where
-  medcomplex's scanner was found to have never run. See `gates/GATES.md`.
+  one project's scanner was found to have never run. See `gates/GATES.md`.
 - **All env access goes through a validated module** (Zod at startup), not bare
   `process.env` reads scattered through the codebase.
 - **`.env*` in `.gitignore`**, and check git *history*, not just the working tree.

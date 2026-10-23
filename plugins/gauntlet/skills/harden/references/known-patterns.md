@@ -1,8 +1,7 @@
 # Known patterns
 
-Defects found in real gauntlet runs across medcomplex-pro, coachflow,
-globalenglishtech, cyberjobs-pro, gauntlet, and waypoint, plus entries reported
-by an outside team that ran the gauntlet on a Supabase + Cloudflare Workers
+Defects found in real gauntlet runs across six production projects, plus entries
+reported by an outside team that ran the gauntlet on a Supabase + Cloudflare Workers
 stack. Every entry here was live in a project that had already passed something.
 
 Check these first. They recur because they come from how the stack behaves, not
@@ -138,7 +137,7 @@ security phase, because nothing was insecure. It just did not work.
 "your data is gone." Check every screen's failure path, not just its success
 path.
 
-**Fabricated data.** A weekly adherence ring computed from nothing, rendered to
+**Fabricated data.** A weekly progress ring computed from nothing, rendered to
 every user, looking authoritative. Users trust charts.
 
 **Client-only onboarding gates.** Bounce-loop forever.

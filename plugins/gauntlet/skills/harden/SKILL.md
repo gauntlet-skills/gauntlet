@@ -8,9 +8,8 @@ license: MIT
 
 A phased hardening process for taking a project from "it works" to "it can face
 real users and real money." The phases were derived from full runs on four
-projects (medcomplex-pro, coachflow, globalenglishtech and cyberjobs-pro).
-`references/known-patterns.md` adds defects from gauntlet and waypoint (six
-projects in all) and from one outside team's production stack.
+real production projects. `references/known-patterns.md` adds defects from two
+more (six in all) and from one outside team's production stack.
 
 Companion skill: the **build** skill produces the numbered build prompts that
 get you a working app. This one starts where that finishes.
@@ -82,14 +81,14 @@ These come from failures in real runs. Each one cost something.
 - **Verify, don't assume.** Every phase document has a "What PASSES — verified,
   not assumed" section. If you did not read the code or run the command, it does
   not go in that section.
-- **A gate you have not seen fail is not a gate.** medcomplex's secret scanner
+- **A gate you have not seen fail is not a gate.** One project's secret scanner
   reported OK for the life of the repo — a swallowed `git grep` error made it
   pass unconditionally, including against a planted live key. See
   `gates/GATES.md`.
 - **Proxy signals cause phantom bugs.** Grepping source for a pattern is not the
   same as reading the output. Read the real result first.
 - **Check CI has ever run.** `gh run list` returning empty means never, not
-  passing. medcomplex's workflow watched `main` while the branch was `master`.
+  passing. One project's workflow watched `main` while the branch was `master`.
 - **Apply every intermediate migration at cutover**, not just the newest. Deployed
   code queries columns from migrations in the middle of the stack.
 - **Never `npm audit fix --force`.** It breaks transitive deps. Targeted patch

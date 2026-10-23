@@ -1,7 +1,7 @@
 # Web scaffold rubric
 
 **144 items · 8 categories · 27 marked `[Critical]`.**
-Analyzer prompt version `v10`.
+Analyzer prompt version `v11`.
 
 Generated from the analyzer source by `scripts/extract-rubric.ts`, not
 transcribed. Regenerate rather than hand-editing.
