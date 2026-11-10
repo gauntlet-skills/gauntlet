@@ -48,6 +48,11 @@ Against production, not a preview URL.
 - **A protected route while signed out** returns a redirect, not content. Check
   the redirect *preserves the intended destination* — a bare `/login` with no
   `redirectTo` is a UX bug that only appears in production.
+- **Lighthouse against the live origin.** Same command and pages as E3,
+  pointed at the production URL. Compare with the E3 reports. Production
+  adds what a local build doesn't have: CDN caching, real images, and
+  third-party scripts (analytics, chat widgets, consent banners). A drop of
+  10+ points from E3 is a finding; name the audit that caused it.
 - **Hit the health endpoint.** *From the first run:* this is the cheapest check
   in the phase and it was the only one that failed. If the app has no health
   endpoint, that is itself the finding — add one before launch, not after.
@@ -130,6 +135,7 @@ Judgment — Phase G does not pass until:
 - [ ] Deployed release hash matches the intended commit
 - [ ] All migrations applied and verified, not just the latest
 - [ ] Header audit run against every production hostname (and against the committed policy, if one exists)
+- [ ] Lighthouse run against production (mobile and desktop) and compared with the E3 reports
 - [ ] Signup completed end-to-end with a real email that **landed in an inbox**
 - [ ] Payment completed and refunded in live mode *(if applicable)*
 - [ ] Auth site URL and redirect allow-list verified against production

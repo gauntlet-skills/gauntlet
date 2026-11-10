@@ -74,6 +74,16 @@ Then re-check. Only when every item passes do you move to the next prompt.
 > **Do not paste two prompts at once.** It is the single most common way this
 > goes wrong. Each prompt assumes the previous one finished and was verified.
 
+**Before prompt 5 (the design system), pick the look.** Ask Claude for two or
+three design directions with a preview page of each before it commits to one.
+Changing the theme later means redoing every screen. If you have a look in mind,
+make mockups in an image tool like ChatGPT and attach them: "Match this color
+scheme and layout."
+
+**Start a fresh session when one gets long.** Answers get worse as a session
+fills up. Between prompts, `/clear` (or open a new session) is safe:
+`BUILD.md`, `SPEC.md` and `CLAUDE.md` hold everything the next prompt needs.
+
 ## Step 3 — Get the keys when you're asked for them
 
 `BUILD.md` ends with a table of services and the prompt that first needs each
@@ -121,6 +131,16 @@ what prompt N asks. Revert anything else."
 
 **You lose the thread across sessions.** `CLAUDE.md` exists for this — the agent
 re-reads it every session. If it has drifted, say "re-read CLAUDE.md."
+
+**It works, but it looks AI-made.** Say so, bluntly. This prompt has turned a
+generic UI into a polished one in practice:
+
+```
+The site looks very AI and not very sophisticated. This needs to look like a
+$100k premier software engineering firm build.
+```
+
+Ask for previews of the options before it rebuilds anything.
 
 **Something feels wrong but you can't say why.** Ask: "What did you just change,
 and why?" You are allowed to not understand the code. You are not allowed to skip

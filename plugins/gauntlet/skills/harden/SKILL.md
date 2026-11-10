@@ -30,7 +30,7 @@ part people skip.
 | **B** | Can it be attacked? | B1 audit → B2 fix → B3 reaudit → B4 hardening → B6 domain | `phases/B-security.md` |
 | **C** | Can a first-time user succeed? | C1 funnel · C2 launch review · C3 post-build audit | `phases/C-ux-funnel.md` |
 | **D** | Is it findable and lawful? | D1 SEO · D2 images · D3 legal · D4 cookies | `phases/D-seo-legal.md` |
-| **E** | Is it actually ready? | E1 checklist · E2 deps · E3 gap sweep · E4 verdict | `phases/E-prelaunch.md` |
+| **E** | Is it actually ready? | E1 checklist · E2 deps · E3 gap sweep + Lighthouse · E4 verdict | `phases/E-prelaunch.md` |
 | **F** | Will the stores accept it? | Store presubmission | `phases/F-mobile.md` |
 | **G** | Did it survive contact? | Post-deploy verification | `phases/G-postdeploy.md` |
 
