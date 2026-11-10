@@ -43,6 +43,41 @@ real launch blockers hide, and they are usually not code:
 Rank P0/P1/P2. P0 blocks launch; P1 runs in parallel with a soft launch; P2 is
 before scaling.
 
+### Lighthouse
+
+Run the Lighthouse CLI against every public page that matters: landing,
+pricing, signup, login, and one content page. It is the cheapest objective
+check of performance, accessibility, best practices and SEO, and it finds
+things code reading misses (contrast, tap-target size, render-blocking
+scripts, layout shift).
+
+```
+npx lighthouse http://localhost:3000/ --chrome-flags="--headless=new" \
+  --only-categories=performance,accessibility,best-practices,seo \
+  --output=json --output=html --output-path=./docs/lighthouse/home
+```
+
+- **Run it against a production build** (`npm run build && npm start`, or a
+  preview deployment), never the dev server. A dev server is unminified and
+  unbundled, so its performance score means nothing.
+- **Mobile first.** The default emulates a throttled phone. Run it again with
+  `--preset=desktop`. Mobile is the one that usually fails.
+- **Performance shifts by several points between runs.** Run three times and
+  report the median. Accessibility, best practices and SEO are stable.
+- **It cannot log in.** For signed-in screens, run the Lighthouse panel in
+  Chrome DevTools while signed in, or list those screens as unverified. Don't
+  leave them out without saying so.
+- **It needs a Chromium browser.** If none is found, set `CHROME_PATH` to an
+  installed Chrome or Edge.
+- **Read the audits, not just the four scores.** Every failing accessibility
+  audit is a finding. LCP, CLS and TBT name the actual performance problem.
+  The SEO category is a mechanical cross-check of D1, not a replacement for it.
+
+Report a table: page × mobile/desktop × the four scores. Aim for 90+ in each
+category. Below that, the failing audits become findings, ranked by page.
+Signup and checkout come before marketing pages. Keep the JSON reports so
+Phase G can compare production against them.
+
 ## E4 — Readiness verdict
 
 Two parts.
@@ -73,6 +108,9 @@ Judgment — Phase E does not pass until:
       reason; nothing marked N-A that is really FAIL
 - [ ] E2 triaged by reachability; deferrals written down with reasons
 - [ ] E3 gaps ranked P0/P1/P2
+- [ ] Lighthouse run against a production build, mobile and desktop, on every
+      public page in scope; the score table pasted from this run; signed-in
+      screens either audited or listed as unverified
 - [ ] E4 answers all four questions with evidence
 - [ ] E4 separates code blockers from operator blockers, and lists the operator
       ones explicitly

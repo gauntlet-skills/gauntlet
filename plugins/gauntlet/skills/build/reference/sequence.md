@@ -39,6 +39,25 @@ every later prompt imports.
 components, shared primitives. Require an empty state on every list component —
 it is the single most-forgotten UI state.
 
+> **Design direction: choose with previews, before Prompt 5.** Every later
+> prompt builds on these tokens, so re-theming after Prompt 10 means touching
+> everything. Open Prompt 5 by having the agent propose two or three distinct
+> directions and **render a preview of each** first: one static page with the
+> landing hero and one app screen, in that direction's colors, type and
+> spacing. The user picks one, and only then are the tokens written.
+>
+> Two inputs that work better than adjectives:
+>
+> - **A mockup image.** The user generates mockups in an image model (ChatGPT
+>   or similar), saves them, and attaches them in the agent: "Match this color
+>   scheme, typography and layout." The tokens come from the image. This can
+>   completely change an app's look, and it also works as a redesign after
+>   the build.
+> - **Name the bar outright.** If the result still looks generic, a blunt
+>   prompt works. One real run's UI improved dramatically from: *"The site
+>   looks very AI and not very sophisticated. This needs to look like a $100k
+>   premier software engineering firm build."*
+
 **6 — Authentication.** Email + password through server routes. The route set
 must match the SPEC file list exactly. Dual fail-closed rate limits (by IP and
 by identifier), lockout with a stated threshold and duration, anti-enumeration

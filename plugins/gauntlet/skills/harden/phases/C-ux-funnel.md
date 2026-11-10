@@ -46,6 +46,15 @@ code doesn't have.
 pages drift from the plan table, and a wrong limit is a support ticket at best
 and a refund at worst.
 
+**Check whether it looks like a template.** A first-time visitor decides in
+seconds whether to trust the product with a card number. Some looks read as
+"AI-made": default component-library styling, a gradient hero, a grid of
+emoji feature cards, the same card repeated everywhere, no real imagery. That
+costs conversions and no metric will show it. Log it as a MEDIUM finding. It
+breaks nothing, but it is a launch problem. The fix is a design pass, not a
+patch. See *Design direction* in the build skill's `reference/sequence.md`,
+including a prompt that has worked in practice.
+
 ## C3 — Post-build audit
 
 After C1/C2 fixes land, re-walk the funnel. Same discipline as B3: the fixes
@@ -61,6 +70,8 @@ Judgment — Phase C does not pass until:
 - [ ] Every screen's **failure** branch was read, not just its success branch
 - [ ] No UI element displays data it cannot actually compute
 - [ ] Every user-facing number traced to its source constant
+- [ ] Landing and first-run screens judged for a generic, template look, and
+      any finding logged
 - [ ] The onboarding payoff action verified to actually do the thing
 - [ ] C3 re-walk done after fixes
 - [ ] Zero CRITICAL, zero HIGH open

@@ -15,6 +15,10 @@ Steps: **D1** SEO · **D2** images · **D3** legal · **D4** cookies
 - Structured data (JSON-LD) where a rich result applies. Serialize with
   `JSON.stringify` of a static object, not string concatenation.
 - Authenticated routes are `noindex`.
+- The Lighthouse SEO category (run in E3) checks part of this list mechanically:
+  titles, descriptions, crawlability, link text. A passing score does not
+  replace the list above, since it can't judge canonicals, sitemap contents or
+  structured data.
 
 ## D2 — Images
 
