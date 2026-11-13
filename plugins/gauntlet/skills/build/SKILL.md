@@ -1,7 +1,7 @@
 ---
 name: build
 description: Generate a sequential build document — the ~16 numbered build prompts that take a spec to a working, hardened app, each ending in a verifiable checkpoint. Covers the fixed core phases, per-feature phases, tail phases, inline during-build spot checks, and cross-prompt consistency. Use when the user says "build plan", "build doc", "build prompts", "BUILD.md", "scaffold the build", "turn this spec into prompts", or asks how to sequence building an app with an AI agent.
-license: MIT
+license: PolyForm-Shield-1.0.0
 ---
 
 # Build Plan
