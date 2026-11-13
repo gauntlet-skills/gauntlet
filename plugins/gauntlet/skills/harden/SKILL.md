@@ -1,7 +1,7 @@
 ---
 name: harden
 description: Run the A–G pre-launch hardening gauntlet on a project — a phased audit-fix-verify cascade covering payments, security, UX funnel, SEO/legal, pre-launch verification, mobile store submission, and post-deploy checks. Every phase ends at a gate that must be proven able to fail. Use when the user says "gauntlet", "launch review", "pre-launch audit", "harden this before launch", "is this ready to ship", or names a phase directly (A1, B1, B3, C2, C3, D1, E1, E4, F, G).
-license: MIT
+license: PolyForm-Shield-1.0.0
 ---
 
 # The Launch Gauntlet

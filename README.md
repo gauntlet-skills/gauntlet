@@ -33,8 +33,9 @@ Every mechanical gate is tested against a known failure. If the gate can't demon
 Best fit: Next.js + Supabase + Stripe + Vercel
 Also useful elsewhere: the build/review/gating methodology transfers, but some hardening checks are stack-specific.
 
-Free, MIT, and it runs entirely inside your own Claude session — no service to
-sign up for, no API key, no per-run cost beyond your own plan.
+Free to use, including on your own commercial apps, and it runs entirely inside
+your own Claude session — no service to sign up for, no API key, no per-run cost
+beyond your own plan.
 
 ## Install
 
@@ -263,4 +264,13 @@ the manifest defeats it.
 
 ## License
 
-MIT. See [LICENSE](LICENSE).
+[PolyForm Shield 1.0.0](LICENSE). In plain terms (the license text governs):
+
+- **You may** use these skills for anything, including building, hardening and
+  reviewing your own paid apps, and modify them for your own use.
+- **You may** share copies, as long as this license and its notice go with them.
+- **You may not** sell them, or use them to offer any product or service that
+  competes with them or with the author's Gauntlet products, even for free.
+
+If you want to do something the license doesn't allow, ask the author for a
+separate license.

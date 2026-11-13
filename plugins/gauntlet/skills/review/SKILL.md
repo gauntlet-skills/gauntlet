@@ -1,7 +1,7 @@
 ---
 name: review
 description: Diff-scoped multi-agent code review with adversarial verification. Fans out parallel reviewers across correctness, security, performance and interaction, then spawns skeptics whose only job is to refute each finding — so what survives is what a skeptic could not break. Use when the user says "review this", "review my changes", "code review", "review this PR", "diy-review", or asks whether a change is safe to merge. EXPENSIVE — spawns many subagents; see the cost section before running.
-license: MIT
+license: PolyForm-Shield-1.0.0
 ---
 
 # Review
