@@ -2,9 +2,14 @@
 
 **N/A for web-only projects.** Record it as N/A and move to G.
 
-> Written once and never run end to end. No build in the evidence base has been
-> submitted to a store. The platform constraints and compliance rules below are
-> verified; the workflow is a reviewed plan. Correct it from your first real
+> **Run, but not yet proven through a store.** F has been run twice on one real
+> Android app (Capacitor, loading a remote URL): an audit, then fixes, then a
+> re-audit against a real local build and the live production site. It found
+> store blockers that reading the code for bugs would not have flagged as
+> blockers: a launch crash once notifications are allowed, a target API level
+> Play no longer accepts, placeholder icons, and gaps in the privacy policy.
+> No app has yet completed Play or App Store submission with it, and the iOS
+> half has only been run as a static audit. Correct it from your first real
 > submission.
 
 ## Decide the track before anything else
