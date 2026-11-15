@@ -234,9 +234,11 @@ branch and had never run.
 
 ## Honest limits
 
-- **Phases A–E and G are grounded in completed runs. F is not.** Post-deploy
-  (G) has completed full runs on several live projects. Store submission (F) has
-  been written but never run end to end, and its file says so at the top.
+- **Phases A–E and G are grounded in completed runs. F is only partly.**
+  Post-deploy (G) has completed full runs on several live projects. Store
+  submission (F) has been run twice on a real Android app and found real
+  rejection issues, but no app has completed Play or App Store submission with
+  it yet. Its file says exactly what has and hasn't been proven.
 - **The stack is opinionated** — Next.js, Supabase, Stripe, Vercel. The phase
   structure and the gate doctrine transfer anywhere; the specific checks assume
   that stack. An outside team ran it on a non-Vercel production stack; what they
