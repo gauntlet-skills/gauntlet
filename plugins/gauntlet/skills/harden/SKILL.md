@@ -1,6 +1,6 @@
 ---
 name: harden
-description: Run the A–G pre-launch hardening gauntlet on a project — a phased audit-fix-verify cascade covering payments, security, UX funnel, SEO/legal, pre-launch verification, mobile store submission, and post-deploy checks. Every phase ends at a gate that must be proven able to fail. Use when the user says "gauntlet", "launch review", "pre-launch audit", "harden this before launch", "is this ready to ship", or names a phase directly (A1, B1, B3, C2, C3, D1, E1, E4, F, G).
+description: Run the A–G pre-launch hardening gauntlet on a project — a phased audit-fix-verify cascade covering payments, security, UX funnel, SEO/legal, pre-launch verification, mobile store submission, and post-deploy checks — plus an opt-in multi-agent pentest phase (P) that proves each exploit before fixing it. Every phase ends at a gate that must be proven able to fail. Use when the user says "gauntlet", "launch review", "pre-launch audit", "harden this before launch", "is this ready to ship", "pentest", "penetration test", "attack my app", "security deep dive", or names a phase directly (A1, B1, B3, C2, C3, D1, E1, E4, F, G, P).
 license: PolyForm-Shield-1.0.0
 ---
 
@@ -33,8 +33,9 @@ part people skip.
 | **E** | Is it actually ready? | E1 checklist · E2 deps · E3 gap sweep + Lighthouse · E4 verdict | `phases/E-prelaunch.md` |
 | **F** | Will the stores accept it? | Store presubmission | `phases/F-mobile.md` |
 | **G** | Did it survive contact? | Post-deploy verification | `phases/G-postdeploy.md` |
+| **P** | Can it be broken on purpose? *(opt-in)* | P0 scope → P1 surface → P2 threat model → P3 hunt → P4 reconcile → P5 prove + fix → P6 skeptic → P7 ship + re-attack → P8 report | `phases/P-pentest.md` |
 
-**Load one phase file at a time.** Do not read all seven — each is self-contained
+**Load one phase file at a time.** Do not read all eight — each is self-contained
 and reading ahead wastes context on phases you may never run.
 
 ## Applicability — decide this first
@@ -46,6 +47,27 @@ Skipping a phase is a decision that gets recorded, not a silent omission.
 - **No payments** → A1 is N/A.
 - **Not deployed yet** → G is **BLOCKED**, not N/A. It runs after go-live.
 - **Everything else runs.** "We don't have users yet" is not a reason to skip C.
+- **P is opt-in**, and the one phase that is not part of the A–G cascade. If it
+  is skipped, record "P: not run" and the reason in the E4 verdict.
+
+## Phase P — the pentest
+
+B reads code for security defects across the whole app. P attacks it: an
+attack-surface inventory that doubles as a coverage ledger, a threat model,
+parallel specialists per bug class, an exploit proof before any CRITICAL or
+HIGH is reported, fixes with fail-before / pass-after evidence, a fresh skeptic
+agent that tries to break the fixes, and a victimless re-attack of production.
+
+**Run it** after B's gate has passed, before launch for any app holding money,
+multi-tenant data or sensitive personal data, and again after a major change to
+auth, billing, roles or database privileges. Route here when the user says
+"pentest", "penetration test", "attack my app" or "security deep dive".
+
+**Warn before starting.** It is heavy: many subagents, real tokens, well beyond
+the review skill's cost, and it needs memory headroom. It needs the owner for
+the scope sign-off, test accounts and read-only SQL in the database editor. It
+is not a human pentest and produces no attestation. Read `phases/P-pentest.md`
+for the full method.
 
 ## The loop
 
@@ -112,6 +134,7 @@ phase you are running needs:
 | **D** SEO & legal | 3 Legal compliance | 5 Store compliance · 6 Health data |
 | **E** pre-launch | 5 Testing & CI · 4 Infrastructure | 8 Testing & CI · 7 Monitoring · 9 Build |
 | **F** store submission | — | 5 Store compliance · 9 Build |
+| **P** pentest | 1 Auth · 2 Stripe · 4 Infrastructure · 6 AI security | 1 Auth · 2 Edge functions · 3 RLS · 4 RevenueCat |
 
 Grading mechanics, N/A discipline, and expected scores are in the header of each
 rubric file. The short version: a `[Critical]` miss fails its whole category,

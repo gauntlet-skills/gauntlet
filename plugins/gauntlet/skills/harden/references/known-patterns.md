@@ -101,6 +101,12 @@ subscriptions quietly never renew. Found on retrofit, not during the build.
 **No idempotency keys on outbound charge calls.** A retried checkout charges
 twice.
 
+**A timeout read as "nothing happened."** A payment provider call timed out and
+the code released the reservation and refunded the grant. A timeout does not
+prove nothing was created, and the SDK may have retried a request that in fact
+succeeded, so a later 409 or 429 is uncertain too. Keep the reservation, replay
+with the same idempotency key and identical parameters, and only then decide.
+
 **Two providers, one row, one watermark.** Stripe and a mobile IAP provider
 writing the same profile row clobber each other. Needs a provider discriminator
 and reconciliation.
@@ -123,6 +129,73 @@ single check in the whole gauntlet.
 
 **Storage buckets without policies.** A separate surface from tables, and
 routinely missed because "RLS is on" refers to tables only.
+
+---
+
+## Database privileges
+
+From a Phase P run on a production Next.js + Supabase SaaS. Each one passed a
+route-by-route review, because the routes were fine. The holes were in what the
+database lets the anon key and a signed-in session do directly.
+
+**Route review calls database holes safe.** A route that filters by `org_id`
+does not protect the table. PostgREST and RPC serve every exposed table and
+function to the anon key, bypassing the routes entirely. Test as the anon key
+plus a real session against the REST API, not only through the app.
+
+**The live database disagreed with the migrations.** Read effective privileges
+from the catalog (`has_table_privilege`, `has_column_privilege`,
+`has_function_privilege`), not from the GRANT statements in migration files.
+The queries are in `phases/P-pentest.md`, P1.
+
+**New functions are executable by everyone.** Postgres grants EXECUTE to PUBLIC
+on every new function, and `anon` and `authenticated` inherit PUBLIC. Revoke
+from `public, anon, authenticated`, then grant back only what a policy or the
+app calls.
+
+**Column grants made a table-level check lie.** A live check that read only
+table privileges reported "no INSERT" while a per-column INSERT grant existed.
+Always check per column as well.
+
+**A table-level REVOKE also removes column grants.** To leave some columns
+writable: revoke at table level, grant the column list, then check the policy.
+
+**WITH CHECK that constrains the owner but not the foreign keys.** A policy
+checked `created_by = auth.uid()` and nothing about `org_id`, so a user could
+write rows into another tenant. WITH CHECK must constrain every id the caller
+supplies, through STABLE SECURITY DEFINER helpers (`is_org_member(org_id)`).
+
+**SECURITY DEFINER RPCs trusting a caller-supplied user or org id.** The
+function runs as its owner, so a `p_user_id` argument lets anyone act as anyone.
+Derive identity from `auth.uid()` inside the function.
+
+**Server-owned columns writable by the user role.** Approval flags, compliance
+verdicts, billing state, counters and audit timestamps were updatable through
+the user's own session. If the app writes them that way, move the write to the
+service role with an explicit ownership filter **before** revoking, or the
+revoke breaks the app.
+
+---
+
+## Background jobs
+
+**A batch job any account can starve.** A cron took the N oldest rows and skipped
+the ineligible ones without advancing past them, so anyone who inserted N
+ineligible rows blocked it permanently. Filter eligibility in the query, cap
+rows per user per run, bound the pages read, and spend rate budgets only on rows
+that will actually be processed.
+
+---
+
+## Build output
+
+**Server secrets inlined into the Edge middleware bundle.** Middleware imported
+one public value from a shared env module whose top-level code parsed
+`process.env` as a whole. The Edge bundler inlined the full environment,
+service-role key included, into the compiled middleware. `import 'server-only'`
+did not catch it, and code review saw one innocent import. Found by scanning
+build output, not source. Build with marker values and grep the output:
+`gates/check-build-secrets.mjs`.
 
 ---
 
@@ -210,6 +283,16 @@ perfectly in the SQL editor, then 500 on signup under the auth service.
 
 **Auditing from the spec instead of the code.** The "What PASSES" section is
 where this shows up. If you did not open the file, it does not go there.
+
+**A fix nobody tried to break.** In a Phase P run, a fresh skeptic agent given
+the code and the findings, but not the conclusions, found a new MEDIUM and
+showed that one merged fix was incomplete. Fixes need the same adversarial pass
+as findings.
+
+**A refusal is not one thing.** A production probe batch can come back all
+"blocked" because the test session expired. Include positive controls, and
+report a privilege denial (`42501` permission denied), an RLS refusal and an
+empty `200 []` separately. The empty result means the privilege exists.
 
 **A zero-finding first-run audit.** Every real first run in this evidence base
 found something. Zero findings means the audit has not been run properly yet.
