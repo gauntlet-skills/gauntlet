@@ -7,7 +7,7 @@ Three free Claude Code skills that turn an AI coding session into a gated develo
 
 Build → structured implementation with checkpoints
 Review → multi-agent review + adversarial verification
-Harden → whole-app security, UX, SEO/legal and launch audit
+Harden → whole-app security, UX, SEO/legal and launch audit, plus an opt-in pentest
 
 /plugin marketplace add gauntlet-skills/gauntlet
 /plugin install gauntlet@gauntlet-skills
@@ -15,7 +15,7 @@ Harden → whole-app security, UX, SEO/legal and launch audit
 ```
 /gauntlet:build     idea       →  ~16 numbered build prompts, each with a checkpoint
 /gauntlet:review    a diff     →  multi-agent review, every finding adversarially verified
-/gauntlet:harden    built app  →  A–G audit cascade, each phase behind a gate
+/gauntlet:harden    built app  →  A–G audit cascade, each phase behind a gate (+ opt-in pentest, P)
 ```
 
 They compose — build it, review each change, harden before launch — but nothing
@@ -102,7 +102,7 @@ transfers; the specific checks assume that stack.
 ## How it works
 
 Three skills, loaded on demand. Only each skill's one-line description sits in
-your session (~526 tokens total); the phase files, the 144-item rubric, and the
+your session (~580 tokens total); the phase files, the 144-item rubric, and the
 gate scripts load **only when you actually invoke one**.
 
 Two kinds of check, deliberately separated:
@@ -135,6 +135,7 @@ and may be deferred **with a written reason**, never silently.
 | A branch or PR to check before merging | **review** |
 | A working app, heading for launch | **harden** |
 | Just deployed | **harden**, Phase G |
+| Want an attacker's view, or just changed auth, billing or DB permissions | **harden**, Phase P (pentest) |
 
 ### review vs harden — they are not the same tool
 
@@ -176,6 +177,44 @@ review not anchored on the first.
 
 Neither one answers the launch question. A clean diff review, from any tool,
 means the change is sound, not that the app is ready. That is what **harden** is for.
+
+## The pentest phase (P)
+
+Phase B reads the whole app for security defects. Phase P attacks it. Say
+"pentest", "attack my app" or "security deep dive" and the harden skill runs it
+after B:
+
+- **Scope first.** A written rules-of-engagement file the owner signs off. No
+  file, no dynamic testing. Production only if the owner writes it in.
+- **Inventory as coverage ledger.** Every route, server action, webhook, cron,
+  exposed table and RPC, each one ending as tested, n/a with a reason, or not
+  reached.
+- **The live database, not the migrations.** Effective table, column and
+  function privileges read from the catalog, because the two disagree and an
+  attacker gets the live one.
+- **Specialists per bug class** in parallel, then **proof before severity**: a
+  CRITICAL or HIGH has to be reproduced, on a production replica or with a
+  victimless production probe (the anon key and test accounts only, never the
+  service role).
+- **Fail-before / pass-after for every fix**, a **fresh skeptic agent** that
+  tries to break the fixes without seeing your conclusions, and a **re-attack of
+  production** at the end.
+- A private report with full evidence, and a public summary that names open
+  items only by category and severity.
+
+**One real run**, on a production Next.js + Supabase SaaS: 52 findings, 4 HIGH
+and 17 MEDIUM. 15 fixes were verified on production and 13 shipped with
+fail-before / pass-after tests. At the end, 0 of 25 production attack probes
+still worked. The skeptic pass found one MEDIUM that everything before it had
+missed, and showed that one earlier fix was incomplete.
+
+**What it is not.** It is not a human pentest and produces no attestation
+letter. Commercial AI pentest services sell that sign-off; this does not. It
+does not test infrastructure or the network, and it does no social engineering.
+Licence, pricing and scope calls stay with the owner, and a HIGH parked on one
+stays open in the report. It is heavy: many subagents and real tokens, well
+beyond `review`. One run is evidence, not a benchmark; recall against seeded
+bugs has not been measured yet.
 
 ## What makes this different
 
@@ -222,7 +261,7 @@ branch and had never run.
 **`/gauntlet:harden`**
 
 - Seven phase files: payments & data, security, UX funnel, SEO & legal,
-  pre-launch, store submission, post-deploy
+  pre-launch, store submission, post-deploy, plus the opt-in pentest phase (P)
 - The full analyzer rubric — 144 web items / 8 categories, 162 mobile / 11
 - `gates/run-gate.sh` — the mechanical gate
 - `gates/check-headers.mjs` — audits the deployed HTTP surface, which is the only
@@ -230,6 +269,9 @@ branch and had never run.
   live headers with a committed policy, to catch drift between the repo and a CDN
   rule or host dashboard; `--preview` audits an AI builder's preview host, where
   framing must be allowed. `gates/canary-headers.mjs` proves both can fail
+- `gates/check-build-secrets.mjs` — builds are scanned for secret marker values,
+  with a public marker as positive control, so a secret inlined into a client or
+  Edge bundle is caught. `gates/canary-build-secrets.mjs` proves it can fail
 - `gates/GATES.md` — why a gate you have not seen fail is not a gate
 
 ## Honest limits
@@ -239,6 +281,9 @@ branch and had never run.
   submission (F) has been run twice on a real Android app and found real
   rejection issues, but no app has completed Play or App Store submission with
   it yet. Its file says exactly what has and hasn't been proven.
+- **P (pentest) is grounded in one completed run.** That run is described
+  above. It has not yet been measured against a seeded-bug benchmark, so there
+  is no recall figure to quote.
 - **The stack is opinionated** — Next.js, Supabase, Stripe, Vercel. The phase
   structure and the gate doctrine transfer anywhere; the specific checks assume
   that stack. An outside team ran it on a non-Vercel production stack; what they
